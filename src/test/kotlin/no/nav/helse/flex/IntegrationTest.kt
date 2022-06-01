@@ -3,6 +3,7 @@ package no.nav.helse.flex
 import no.nav.helse.flex.melding.MeldingKafkaProducer
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.OpprettMelding
+import no.nav.helse.flex.melding.domene.Variant
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.shouldHaveSize
@@ -37,7 +38,9 @@ class IntegrationTest : FellesTestOppsett() {
                 tekst = "Sjekk denne meldinga",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
-                synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS)
+                synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
+                variant = Variant.info,
+                lukkbar = true,
             ),
             lukkMelding = null
         )
@@ -83,7 +86,9 @@ class IntegrationTest : FellesTestOppsett() {
                 tekst = "Sjekk denne meldinga",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
-                synligFremTil = Instant.now().minusSeconds(2)
+                synligFremTil = Instant.now().minusSeconds(2),
+                variant = Variant.info,
+                lukkbar = true,
             ),
             lukkMelding = null
         )

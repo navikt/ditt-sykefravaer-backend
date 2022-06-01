@@ -45,7 +45,9 @@ class VedtakTokenXController(
                 MeldingRest(
                     uuid = it.meldingUuid,
                     tekst = it.tekst,
-                    lenke = it.lenke
+                    lenke = it.lenke,
+                    variant = it.variant,
+                    lukkbar = it.lukkbar,
                 )
             }
     }
@@ -53,7 +55,7 @@ class VedtakTokenXController(
     @PostMapping(value = ["/meldinger/{meldingUuid}/lukk"], produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
     @ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
-    fun lesVedtak(@PathVariable meldingUuid: String): String {
+    fun lukkMelding(@PathVariable meldingUuid: String): String {
         val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
 
         val meldingDbRecord = (
@@ -61,7 +63,9 @@ class VedtakTokenXController(
                 .firstOrNull { it.meldingUuid == meldingUuid }
                 ?: throw FeilUuidForLukking()
             )
-
+        if (!meldingDbRecord.lukkbar) {
+            throw IkkeLukkbar()
+        }
         meldingKafkaProducer.produserMelding(
             meldingDbRecord.meldingUuid,
             MeldingKafkaDto(
@@ -104,5 +108,12 @@ private class FeilUuidForLukking : AbstractApiError(
     message = "Forsøker å lukke uuid vi ikke finner i databasen",
     httpStatus = HttpStatus.BAD_REQUEST,
     reason = "FEIL_UUID_FOR_LUKKING",
+    loglevel = LogLevel.WARN
+)
+
+private class IkkeLukkbar : AbstractApiError(
+    message = "Forsøker å lukke melding som ikke er lukkbar",
+    httpStatus = HttpStatus.BAD_REQUEST,
+    reason = "IKKE_LUKKBAR",
     loglevel = LogLevel.WARN
 )

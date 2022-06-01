@@ -13,6 +13,8 @@ data class MeldingDbRecord(
     val tekst: String,
     val lenke: String,
     val meldingType: String,
+    val variant: Variant,
+    val lukkbar: Boolean,
     val opprettet: Instant,
     val synligFremTil: Instant?,
     val lukket: Instant?

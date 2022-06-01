@@ -2,6 +2,7 @@ package no.nav.helse.flex.melding
 
 import no.nav.helse.flex.FellesTestOppsett
 import no.nav.helse.flex.melding.domene.MeldingDbRecord
+import no.nav.helse.flex.melding.domene.Variant
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -19,7 +20,9 @@ class MeldingRepositoryTest : FellesTestOppsett() {
             lenke = "http://heisann",
             meldingType = "hoi",
             synligFremTil = Instant.now(),
-            meldingUuid = UUID.randomUUID().toString()
+            meldingUuid = UUID.randomUUID().toString(),
+            variant = Variant.info,
+            lukkbar = true,
         )
         meldingRepository.save(melding)
 

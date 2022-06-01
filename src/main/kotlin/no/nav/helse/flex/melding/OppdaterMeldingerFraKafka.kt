@@ -2,6 +2,7 @@ package no.nav.helse.flex.melding
 
 import no.nav.helse.flex.melding.domene.MeldingDbRecord
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
+import no.nav.helse.flex.melding.domene.Variant
 import org.springframework.stereotype.Component
 import java.time.Instant
 
@@ -31,6 +32,8 @@ class OppdaterMeldingerFraKafka(
                     lukket = null,
                     meldingType = meldingKafkaDto.opprettMelding.meldingType,
                     lenke = meldingKafkaDto.opprettMelding.lenke,
+                    variant = Variant.info,
+                    lukkbar = true,
                 )
             )
         }
