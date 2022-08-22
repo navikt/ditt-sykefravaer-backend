@@ -11,7 +11,7 @@ data class MeldingDbRecord(
     val meldingUuid: String,
     val fnr: String,
     val tekst: String,
-    val lenke: String,
+    val lenke: String?,
     val meldingType: String,
     val variant: Variant,
     val lukkbar: Boolean,

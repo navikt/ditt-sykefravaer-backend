@@ -21,7 +21,7 @@ enum class Variant {
 
 data class OpprettMelding(
     val tekst: String,
-    val lenke: String,
+    val lenke: String?,
     val variant: Variant,
     val lukkbar: Boolean,
     val meldingType: String,
