@@ -26,7 +26,7 @@ management:
     exposure.include: health,prometheus
 
 logging.config: "classpath:logback.xml"
-
+nais.cluster: ${NAIS_CLUSTER_NAME}
 
 no.nav.security.jwt:
   issuer:

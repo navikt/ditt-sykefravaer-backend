@@ -3,6 +3,8 @@ KAFKA_CREDSTORE_PASSWORD: ""
 KAFKA_SECURITY_PROTOCOL: "PLAINTEXT"
 KAFKA_KEYSTORE_PATH: ""
 
+nais.cluster: test
+
 aiven-kafka:
   auto-offset-reset: latest
 
