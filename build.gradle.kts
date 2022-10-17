@@ -28,7 +28,7 @@ repositories {
 val testContainersVersion = "1.17.5"
 val tokenSupportVersion = "2.1.6"
 val logstashLogbackEncoderVersion = "7.2"
-val kluentVersion = "1.69"
+val kluentVersion = "1.70"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
