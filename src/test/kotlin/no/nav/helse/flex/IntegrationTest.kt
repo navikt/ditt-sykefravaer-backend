@@ -31,7 +31,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(1)
-    fun `mottar melding`() {
+    fun `Mottar melding`() {
         val kafkaMelding = MeldingKafkaDto(
             fnr = fnr,
             opprettMelding = OpprettMelding(
@@ -57,7 +57,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(2)
-    fun `henter melding fra apiet`() {
+    fun `Henter melding fra REST API`() {
         val meldinger = hentMeldinger(fnr)
         meldinger.shouldHaveSize(1)
         meldinger.first().tekst `should be equal to` "Sjekk denne meldinga"
@@ -65,7 +65,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(3)
-    fun `Vi lukker meldinga`() {
+    fun `Lukker Meldinga`() {
         val meldinger = hentMeldinger(fnr)
         val uuid = meldinger.first().uuid
         lukkMelding(fnr, uuid)
@@ -77,7 +77,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(4)
-    fun `en melding med synlig frem til i fortiden vil ikke bli vist`() {
+    fun `Melding med synlig-frem-til i fortiden vil ikke bli vist`() {
         meldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
 
         val kafkaMelding = MeldingKafkaDto(
@@ -103,7 +103,7 @@ class IntegrationTest : FellesTestOppsett() {
     }
 
     @Test
-    fun `Kan ikke lukke random melding`() {
+    fun `Kan ikke lukke melding tilhørende noen andre`() {
         val uuid = UUID.randomUUID().toString()
 
         mockMvc.perform(
