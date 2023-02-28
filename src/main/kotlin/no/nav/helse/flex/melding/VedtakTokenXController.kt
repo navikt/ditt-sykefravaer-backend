@@ -30,7 +30,7 @@ class VedtakTokenXController(
     val dittSykefravaerFrontendClientId: String,
 
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP}")
-    val dittSykefravaerFrontendTokenxIdp: String,
+    val dittSykefravaerFrontendTokenxIdp: String
 ) {
 
     @GetMapping("/meldinger", produces = [APPLICATION_JSON_VALUE])
@@ -49,7 +49,7 @@ class VedtakTokenXController(
                     variant = it.variant,
                     lukkbar = it.lukkbar,
                     meldingType = it.meldingType,
-                    opprettet = it.opprettet,
+                    opprettet = it.opprettet
                 )
             }
     }

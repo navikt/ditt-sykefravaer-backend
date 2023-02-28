@@ -39,8 +39,8 @@ class IntegrationTest : FellesTestOppsett() {
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
-                variant = Variant.info,
-                lukkbar = true,
+                variant = Variant.INFO,
+                lukkbar = true
             ),
             lukkMelding = null
         )
@@ -87,8 +87,8 @@ class IntegrationTest : FellesTestOppsett() {
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().minusSeconds(2),
-                variant = Variant.info,
-                lukkbar = true,
+                variant = Variant.INFO,
+                lukkbar = true
             ),
             lukkMelding = null
         )

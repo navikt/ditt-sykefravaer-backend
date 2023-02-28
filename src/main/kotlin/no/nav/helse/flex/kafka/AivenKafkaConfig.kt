@@ -56,7 +56,7 @@ class AivenKafkaConfig(
         SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG to kafkaCredstorePassword,
         SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG to kafkaKeystorePath,
         SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG to kafkaCredstorePassword,
-        SslConfigs.SSL_KEY_PASSWORD_CONFIG to kafkaCredstorePassword,
+        SslConfigs.SSL_KEY_PASSWORD_CONFIG to kafkaCredstorePassword
     )
 
     @Bean
@@ -69,7 +69,7 @@ class AivenKafkaConfig(
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-            ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "1",
+            ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "1"
         ) + commonConfig()
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(config)
 

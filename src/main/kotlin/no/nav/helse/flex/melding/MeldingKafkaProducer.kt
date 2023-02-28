@@ -14,7 +14,6 @@ class MeldingKafkaProducer(
 ) {
 
     fun produserMelding(meldingUuid: String, meldingKafkaDto: MeldingKafkaDto): RecordMetadata {
-
         return producer.send(
             ProducerRecord(
                 dittSykefravaerMeldingTopic,

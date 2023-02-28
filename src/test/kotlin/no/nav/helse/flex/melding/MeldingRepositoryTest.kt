@@ -21,8 +21,8 @@ class MeldingRepositoryTest : FellesTestOppsett() {
             meldingType = "hoi",
             synligFremTil = Instant.now(),
             meldingUuid = UUID.randomUUID().toString(),
-            variant = Variant.info,
-            lukkbar = true,
+            variant = Variant.INFO,
+            lukkbar = true
         )
         meldingRepository.save(melding)
 
