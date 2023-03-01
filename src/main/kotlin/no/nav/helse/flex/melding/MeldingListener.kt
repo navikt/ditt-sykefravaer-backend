@@ -24,21 +24,16 @@ class MeldingListener(
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         try {
-            oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(cr.value()))
+            if ("3f98fdcb-6abf-48ce-bced-21993ead3f50" == cr.key()) {
+                val medLowerCaseEnumVerdi =
+                    cr.value().toString().replace("\"variant\":\"INFO\"", "\"variant\":\"info\"")
+                oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(medLowerCaseEnumVerdi))
+                log.info("Håndterte melding med key ${cr.key()} etter endring fra INFO til info")
+            } else {
+                oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(cr.value()))
+            }
             acknowledgment.acknowledge()
         } catch (e: Exception) {
-            val valueAsString = cr.value().toString()
-            if ("3f98fdcb-6abf-48ce-bced-21993ead3f50" == cr.key()) {
-                try {
-                    val replaced = valueAsString.replace("\"variant\":\"INFO\"", "\"variant\":\"info\"")
-                    oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(replaced))
-                    acknowledgment.acknowledge()
-                    log.info("Håndterte melding med key ${cr.key()} etter endring fra INFO til info")
-                } catch (e: Exception) {
-                    log.error("Klarte ikke å håndtere melding med key ${cr.key()} etter endring fra INFO til info", e)
-                }
-            }
-
             if (environmentToggles.isDevelopment()) {
                 log.warn("Kafka-melding med key: ${cr.key()} feilet men ble acknowledged siden dette er i DEV.", e)
                 acknowledgment.acknowledge()
