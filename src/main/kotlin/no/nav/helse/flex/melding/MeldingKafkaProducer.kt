@@ -14,12 +14,21 @@ class MeldingKafkaProducer(
 ) {
 
     fun produserMelding(meldingUuid: String, meldingKafkaDto: MeldingKafkaDto): RecordMetadata {
-
         return producer.send(
             ProducerRecord(
                 dittSykefravaerMeldingTopic,
                 meldingUuid,
                 meldingKafkaDto.serialisertTilString()
+            )
+        ).get()
+    }
+
+    fun produserMelding(meldingUuid: String, meldingSomString: String): RecordMetadata {
+        return producer.send(
+            ProducerRecord(
+                dittSykefravaerMeldingTopic,
+                meldingUuid,
+                meldingSomString
             )
         ).get()
     }
