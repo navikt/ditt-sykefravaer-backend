@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MeldingRepository : CrudRepository<MeldingDbRecord, String> {
     fun findByFnrIn(fnrs: List<String>): List<MeldingDbRecord>
-
     @Modifying
     @Query("delete from Melding m where m.fnr = :fnr")
     fun deleteByFnr(fnr: String): Long

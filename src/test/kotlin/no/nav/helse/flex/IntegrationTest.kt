@@ -27,21 +27,20 @@ class IntegrationTest : FellesTestOppsett() {
     @Autowired
     lateinit var meldingKafkaProducer: MeldingKafkaProducer
 
-    val fnr_1 = "12343787332"
-    val fnr_2 = "12343787333"
+    val fnr = "12343787332"
 
     @Test
     @Order(1)
-    fun `Mottar melding`() {
+    fun `mottar melding`() {
         val kafkaMelding = MeldingKafkaDto(
-            fnr = fnr_1,
+            fnr = fnr,
             opprettMelding = OpprettMelding(
                 tekst = "Sjekk denne meldinga",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
-                variant = Variant.INFO,
-                lukkbar = true
+                variant = Variant.info,
+                lukkbar = true,
             ),
             lukkMelding = null
         )
@@ -49,64 +48,47 @@ class IntegrationTest : FellesTestOppsett() {
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
         await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(fnr_1)).isNotEmpty()
+            meldingRepository.findByFnrIn(listOf(fnr)).isNotEmpty()
         }
 
-        val melding = meldingRepository.findByFnrIn(listOf(fnr_1)).first()
-        melding.lukket.`should be null`()
-    }
-
-    @Test
-    @Order(1)
-    fun `Mottar melding med lower case enum-verdier`() {
-        val kafkaMeldingSomString =
-            "{\"opprettMelding\":{\"tekst\":\"Sjekk denne meldinga\",\"lenke\":\"http://www.nav.no\",\"variant\":\"info\",\"lukkbar\":true,\"meldingType\":\"whatever\",\"synligFremTil\":\"2023-03-02T12:25:53.522821Z\"},\"lukkMelding\":null,\"fnr\":\"12343787333\"}"
-
-        val uuid = UUID.randomUUID().toString()
-        meldingKafkaProducer.produserMelding(uuid, kafkaMeldingSomString)
-
-        await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(fnr_2)).isNotEmpty()
-        }
-
-        val melding = meldingRepository.findByFnrIn(listOf(fnr_2)).first()
+        val melding = meldingRepository.findByFnrIn(listOf(fnr)).first()
         melding.lukket.`should be null`()
     }
 
     @Test
     @Order(2)
-    fun `Henter melding fra REST API`() {
-        val meldinger = hentMeldinger(fnr_1)
+    fun `henter melding fra apiet`() {
+        val meldinger = hentMeldinger(fnr)
         meldinger.shouldHaveSize(1)
         meldinger.first().tekst `should be equal to` "Sjekk denne meldinga"
     }
 
     @Test
     @Order(3)
-    fun `Lukker Meldinga`() {
-        val meldinger = hentMeldinger(fnr_1)
+    fun `Vi lukker meldinga`() {
+        val meldinger = hentMeldinger(fnr)
         val uuid = meldinger.first().uuid
-        lukkMelding(fnr_1, uuid)
+        lukkMelding(fnr, uuid)
         await().atMost(5, TimeUnit.SECONDS).until {
             meldingRepository.findByMeldingUuid(uuid)!!.lukket != null
         }
-        hentMeldinger(fnr_1).shouldHaveSize(0)
+        hentMeldinger(fnr).shouldHaveSize(0)
     }
 
     @Test
     @Order(4)
-    fun `Melding med synlig-frem-til i fortiden vil ikke bli vist`() {
-        meldingRepository.findByFnrIn(listOf(fnr_1)).shouldHaveSize(1)
+    fun `en melding med synlig frem til i fortiden vil ikke bli vist`() {
+        meldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
 
         val kafkaMelding = MeldingKafkaDto(
-            fnr = fnr_1,
+            fnr = fnr,
             opprettMelding = OpprettMelding(
                 tekst = "Sjekk denne meldinga",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().minusSeconds(2),
-                variant = Variant.INFO,
-                lukkbar = true
+                variant = Variant.info,
+                lukkbar = true,
             ),
             lukkMelding = null
         )
@@ -114,19 +96,19 @@ class IntegrationTest : FellesTestOppsett() {
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
         await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(fnr_1)).size == 2
+            meldingRepository.findByFnrIn(listOf(fnr)).size == 2
         }
 
-        hentMeldinger(fnr_1).shouldHaveSize(0)
+        hentMeldinger(fnr).shouldHaveSize(0)
     }
 
     @Test
-    fun `Kan ikke lukke melding tilhørende noen andre`() {
+    fun `Kan ikke lukke random melding`() {
         val uuid = UUID.randomUUID().toString()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/meldinger/$uuid/lukk")
-                .header("Authorization", "Bearer ${tokenxToken(fnr_1)}")
+                .header("Authorization", "Bearer ${tokenxToken(fnr)}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
