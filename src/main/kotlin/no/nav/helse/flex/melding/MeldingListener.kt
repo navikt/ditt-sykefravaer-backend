@@ -24,14 +24,7 @@ class MeldingListener(
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         try {
-            if ("3f98fdcb-6abf-48ce-bced-21993ead3f50" == cr.key()) {
-                val medLowerCaseEnumVerdi =
-                    cr.value().toString().replace("\"variant\":\"INFO\"", "\"variant\":\"info\"")
-                oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(medLowerCaseEnumVerdi))
-                log.info("Håndterte melding med key ${cr.key()} etter endring fra INFO til info")
-            } else {
-                oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(cr.value()))
-            }
+            oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(cr.value()))
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             if (environmentToggles.isDevelopment()) {
