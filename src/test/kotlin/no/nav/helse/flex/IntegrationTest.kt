@@ -21,26 +21,27 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+private const val FNR_1 = "fnr-1"
+private const val FNR_2 = "fnr-2"
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest : FellesTestOppsett() {
 
     @Autowired
     lateinit var meldingKafkaProducer: MeldingKafkaProducer
 
-    val fnr = "12343787332"
-
     @Test
     @Order(1)
-    fun `mottar melding`() {
+    fun `Mottar melding med upper case enum-verdie for Variant`() {
         val kafkaMelding = MeldingKafkaDto(
-            fnr = fnr,
+            fnr = FNR_1,
             opprettMelding = OpprettMelding(
-                tekst = "Sjekk denne meldinga",
+                tekst = "Melding 1",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
-                variant = Variant.info,
-                lukkbar = true,
+                variant = Variant.INFO,
+                lukkbar = true
             ),
             lukkMelding = null
         )
@@ -48,47 +49,70 @@ class IntegrationTest : FellesTestOppsett() {
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
         await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(fnr)).isNotEmpty()
+            meldingRepository.findByFnrIn(listOf(FNR_1)).isNotEmpty()
         }
 
-        val melding = meldingRepository.findByFnrIn(listOf(fnr)).first()
+        val melding = meldingRepository.findByFnrIn(listOf(FNR_1)).first()
         melding.lukket.`should be null`()
     }
 
     @Test
-    @Order(2)
-    fun `henter melding fra apiet`() {
-        val meldinger = hentMeldinger(fnr)
-        meldinger.shouldHaveSize(1)
-        meldinger.first().tekst `should be equal to` "Sjekk denne meldinga"
+    @Order(1)
+    fun `Mottar melding med lower case enum-verdie for Variant men upper-case er lagret i databasen`() {
+        val kafkaMeldingSomString =
+            "{\"opprettMelding\":{\"tekst\":\"Melding 2\",\"lenke\":\"http://www.nav.no\",\"variant\":\"info\",\"lukkbar\":true,\"meldingType\":\"whatever\",\"synligFremTil\":\"${Instant.now().plus(2, ChronoUnit.DAYS)}\"},\"lukkMelding\":null,\"fnr\":\"$FNR_2\"}"
+
+        val uuid = UUID.randomUUID().toString()
+        meldingKafkaProducer.produserMelding(uuid, kafkaMeldingSomString)
+
+        await().atMost(5, TimeUnit.SECONDS).until {
+            meldingRepository.findByFnrIn(listOf(FNR_2)).isNotEmpty()
+        }
+
+        val melding = meldingRepository.findByFnrIn(listOf(FNR_2)).first()
+        melding.variant `should be equal to` "INFO"
     }
 
     @Test
     @Order(3)
-    fun `Vi lukker meldinga`() {
-        val meldinger = hentMeldinger(fnr)
-        val uuid = meldinger.first().uuid
-        lukkMelding(fnr, uuid)
-        await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByMeldingUuid(uuid)!!.lukket != null
-        }
-        hentMeldinger(fnr).shouldHaveSize(0)
+    fun `Henter meldinger via REST API`() {
+        val melding1 = hentMeldinger(FNR_1)
+        melding1.shouldHaveSize(1)
+        melding1.first().tekst `should be equal to` "Melding 1"
+        melding1.first().variant `should be equal to` "info"
+
+        val melding2 = hentMeldinger(FNR_2)
+        melding2.shouldHaveSize(1)
+        melding2.first().tekst `should be equal to` "Melding 2"
+        melding2.first().variant `should be equal to` "info"
     }
 
     @Test
     @Order(4)
-    fun `en melding med synlig frem til i fortiden vil ikke bli vist`() {
-        meldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
+    fun `Lukk melding`() {
+        val meldinger = hentMeldinger(FNR_1)
+        val uuid = meldinger.first().uuid
+        lukkMelding(FNR_1, uuid)
+        await().atMost(5, TimeUnit.SECONDS).until {
+            meldingRepository.findByMeldingUuid(uuid)!!.lukket != null
+        }
+        hentMeldinger(FNR_1).shouldHaveSize(0)
+    }
+
+    @Test
+    @Order(5)
+    fun `Melding med synlig-frem-til i fortiden vil ikke bli vist`() {
+        meldingRepository.findByFnrIn(listOf(FNR_1)).shouldHaveSize(1)
 
         val kafkaMelding = MeldingKafkaDto(
-            fnr = fnr,
+            fnr = FNR_1,
             opprettMelding = OpprettMelding(
-                tekst = "Sjekk denne meldinga",
+                tekst = "Melding 3",
                 lenke = "http://www.nav.no",
                 meldingType = "whatever",
                 synligFremTil = Instant.now().minusSeconds(2),
-                variant = Variant.info,
-                lukkbar = true,
+                variant = Variant.INFO,
+                lukkbar = true
             ),
             lukkMelding = null
         )
@@ -96,19 +120,19 @@ class IntegrationTest : FellesTestOppsett() {
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
         await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(fnr)).size == 2
+            meldingRepository.findByFnrIn(listOf(FNR_1)).size == 2
         }
 
-        hentMeldinger(fnr).shouldHaveSize(0)
+        hentMeldinger(FNR_1).shouldHaveSize(0)
     }
 
-    @Test
-    fun `Kan ikke lukke random melding`() {
+    @Order(6)
+    fun `Kan ikke lukke melding tilhørende noen andre`() {
         val uuid = UUID.randomUUID().toString()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/meldinger/$uuid/lukk")
-                .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                .header("Authorization", "Bearer ${tokenxToken(FNR_1)}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
