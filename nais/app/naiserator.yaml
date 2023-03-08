@@ -45,7 +45,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_14
-        tier: {{ db_tier }}
+        tier: {{db_tier}}
         diskType: SSD
         highAvailability: true
         diskSize: 10
@@ -53,12 +53,17 @@ spec:
         diskAutoresize: true
         databases:
           - name: ditt-sykefravaer-backend-db
+            users:
+              - name: bigquery-datastream
             envVarPrefix: DATABASE
         maintenance:
           day: 2
           hour: 2
+        flags:
+          - name: cloudsql.logical_decoding
+            value: "on"
   env:
   {{#each env}}
      - name: {{@key}}
-       value: {{this}}
+       value: "{{this}}"
   {{/each}}
