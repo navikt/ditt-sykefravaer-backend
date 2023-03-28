@@ -32,7 +32,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(1)
-    fun `Mottar melding med upper case enum-verdie for Variant`() {
+    fun `Mottar melding med upper case enum-verdi for Variant`() {
         val kafkaMelding = MeldingKafkaDto(
             fnr = FNR_1,
             opprettMelding = OpprettMelding(
@@ -60,7 +60,7 @@ class IntegrationTest : FellesTestOppsett() {
     @Order(1)
     fun `Mottar melding med lower case enum-verdie for Variant men upper-case er lagret i databasen`() {
         val kafkaMeldingSomString =
-            "{\"opprettMelding\":{\"tekst\":\"Melding 2\",\"lenke\":\"http://www.nav.no\",\"variant\":\"info\",\"lukkbar\":true,\"meldingType\":\"whatever\",\"synligFremTil\":\"${Instant.now().plus(2, ChronoUnit.DAYS)}\"},\"lukkMelding\":null,\"fnr\":\"$FNR_2\"}"
+            "{\"opprettMelding\":{\"tekst\":\"Melding 2\",\"lenke\":\"https://www.nav.no\",\"variant\":\"info\",\"lukkbar\":true,\"meldingType\":\"whatever\",\"synligFremTil\":\"${Instant.now().plus(2, ChronoUnit.DAYS)}\"},\"lukkMelding\":null,\"fnr\":\"$FNR_2\"}"
 
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMeldingSomString)

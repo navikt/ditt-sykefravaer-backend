@@ -10,7 +10,7 @@ import java.time.Instant
 private const val FNR_1 = "fnr-1"
 private const val FNR_2 = "fnr-2"
 
-class VariantCaseTest : FellesTestOppsett() {
+class VariantIntegrationTest : FellesTestOppsett() {
 
     @BeforeAll
     fun `Lagre melding med både upper- og lower-case Variant i databasen`() {
