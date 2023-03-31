@@ -21,7 +21,7 @@ import java.time.Instant
 
 @Controller
 @RequestMapping("/api/v1")
-class VedtakTokenXController(
+class MeldingApi(
     val meldingRepository: MeldingRepository,
     val tokenValidationContextHolder: TokenValidationContextHolder,
     val meldingKafkaProducer: MeldingKafkaProducer,
@@ -30,7 +30,7 @@ class VedtakTokenXController(
     val dittSykefravaerFrontendClientId: String,
 
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP}")
-    val dittSykefravaerFrontendTokenxIdp: String,
+    val dittSykefravaerFrontendTokenxIdp: String
 ) {
 
     @GetMapping("/meldinger", produces = [APPLICATION_JSON_VALUE])
@@ -46,10 +46,11 @@ class VedtakTokenXController(
                     uuid = it.meldingUuid,
                     tekst = it.tekst,
                     lenke = it.lenke,
-                    variant = it.variant,
+                    // Lagret som upper-case i databasen, men frontend forventer lower-case.
+                    variant = it.variant.lowercase(),
                     lukkbar = it.lukkbar,
                     meldingType = it.meldingType,
-                    opprettet = it.opprettet,
+                    opprettet = it.opprettet
                 )
             }
     }

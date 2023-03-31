@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface MeldingRepository : CrudRepository<MeldingDbRecord, String> {
+
     fun findByFnrIn(fnrs: List<String>): List<MeldingDbRecord>
+
     @Modifying
-    @Query("delete from Melding m where m.fnr = :fnr")
+    @Query("DELETE FROM melding WHERE fnr = :fnr")
     fun deleteByFnr(fnr: String): Long
 
     fun findByMeldingUuid(meldingUuid: String): MeldingDbRecord?

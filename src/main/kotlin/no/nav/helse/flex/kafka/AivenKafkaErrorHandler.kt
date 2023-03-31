@@ -20,12 +20,11 @@ class AivenKafkaErrorHandler : DefaultErrorHandler(
     private val log = logger()
 
     override fun handleRemaining(
-        thrownException: java.lang.Exception,
+        thrownException: Exception,
         records: MutableList<ConsumerRecord<*, *>>,
         consumer: Consumer<*, *>,
         container: MessageListenerContainer
     ) {
-
         records.forEach { record ->
             log.error(
                 "Feil i prossesseringen av record med offset: ${record.offset()}, key: ${record.key()} på topic ${record.topic()}",

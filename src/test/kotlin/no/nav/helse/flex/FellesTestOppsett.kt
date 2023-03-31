@@ -75,7 +75,6 @@ abstract class FellesTestOppsett {
     }
 
     fun hentMeldinger(fnr: String): List<MeldingRest> {
-
         val json = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/meldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr)}")
@@ -104,10 +103,9 @@ abstract class FellesTestOppsett {
             "acr" to "Level4",
             "idp" to "idporten",
             "client_id" to clientId,
-            "pid" to fnr,
-        ),
+            "pid" to fnr
+        )
     ): String {
-
         return server.issueToken(
             issuerId,
             clientId,

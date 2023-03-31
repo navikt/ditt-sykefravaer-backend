@@ -6,8 +6,8 @@ data class MeldingRest(
     val uuid: String,
     val tekst: String,
     val lenke: String?,
-    val variant: Variant,
+    val variant: String,
     val lukkbar: Boolean,
     val meldingType: String,
-    val opprettet: Instant,
+    val opprettet: Instant
 )

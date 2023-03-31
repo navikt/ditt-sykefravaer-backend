@@ -31,8 +31,8 @@ class OppdaterMeldingerFraKafka(
                     lukket = null,
                     meldingType = meldingKafkaDto.opprettMelding.meldingType,
                     lenke = meldingKafkaDto.opprettMelding.lenke,
-                    variant = meldingKafkaDto.opprettMelding.variant,
-                    lukkbar = meldingKafkaDto.opprettMelding.lukkbar,
+                    variant = meldingKafkaDto.opprettMelding.variant.toString(),
+                    lukkbar = meldingKafkaDto.opprettMelding.lukkbar
                 )
             )
         }

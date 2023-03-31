@@ -9,4 +9,6 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
+    <logger name="no.nav.helse.flex" level="INFO"/>
+
 </configuration>
