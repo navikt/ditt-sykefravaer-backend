@@ -32,3 +32,5 @@ no.nav.security.jwt:
     tokenx:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
       accepted_audience: ditt-sykefravaer-backend-client-id
+
+elector.path: dont_look_for_leader
