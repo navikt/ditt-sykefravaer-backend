@@ -16,8 +16,4 @@ interface MeldingRepository : CrudRepository<MeldingDbRecord, String> {
     fun deleteByFnr(fnr: String): Long
 
     fun findByMeldingUuid(meldingUuid: String): MeldingDbRecord?
-
-    @Modifying
-    @Query("UPDATE melding SET variant = upper(variant)")
-    fun variantTilUpperCase(): Long
 }

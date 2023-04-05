@@ -24,7 +24,6 @@ spec:
     timeout: 1
     periodSeconds: 5
     failureThreshold: 20
-  leaderElection: true
   prometheus:
     enabled: true
     path: /internal/prometheus
