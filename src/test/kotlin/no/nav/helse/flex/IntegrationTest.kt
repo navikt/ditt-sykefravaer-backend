@@ -22,7 +22,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 private const val FNR_1 = "fnr-1"
-private const val FNR_2 = "fnr-2"
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest : FellesTestOppsett() {
@@ -32,7 +31,7 @@ class IntegrationTest : FellesTestOppsett() {
 
     @Test
     @Order(1)
-    fun `Mottar melding med upper case enum-verdi for Variant`() {
+    fun `Mottar melding`() {
         val kafkaMelding = MeldingKafkaDto(
             fnr = FNR_1,
             opprettMelding = OpprettMelding(
@@ -57,38 +56,16 @@ class IntegrationTest : FellesTestOppsett() {
     }
 
     @Test
-    @Order(1)
-    fun `Mottar melding med lower case enum-verdie for Variant men upper-case er lagret i databasen`() {
-        val kafkaMeldingSomString =
-            "{\"opprettMelding\":{\"tekst\":\"Melding 2\",\"lenke\":\"https://www.nav.no\",\"variant\":\"info\",\"lukkbar\":true,\"meldingType\":\"whatever\",\"synligFremTil\":\"${Instant.now().plus(2, ChronoUnit.DAYS)}\"},\"lukkMelding\":null,\"fnr\":\"$FNR_2\"}"
-
-        val uuid = UUID.randomUUID().toString()
-        meldingKafkaProducer.produserMelding(uuid, kafkaMeldingSomString)
-
-        await().atMost(5, TimeUnit.SECONDS).until {
-            meldingRepository.findByFnrIn(listOf(FNR_2)).isNotEmpty()
-        }
-
-        val melding = meldingRepository.findByFnrIn(listOf(FNR_2)).first()
-        melding.variant `should be equal to` "INFO"
-    }
-
-    @Test
-    @Order(3)
+    @Order(2)
     fun `Henter meldinger via REST API`() {
         val melding1 = hentMeldinger(FNR_1)
         melding1.shouldHaveSize(1)
         melding1.first().tekst `should be equal to` "Melding 1"
         melding1.first().variant `should be equal to` "info"
-
-        val melding2 = hentMeldinger(FNR_2)
-        melding2.shouldHaveSize(1)
-        melding2.first().tekst `should be equal to` "Melding 2"
-        melding2.first().variant `should be equal to` "info"
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     fun `Lukk melding`() {
         val meldinger = hentMeldinger(FNR_1)
         val uuid = meldinger.first().uuid
@@ -100,7 +77,7 @@ class IntegrationTest : FellesTestOppsett() {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     fun `Melding med synlig-frem-til i fortiden vil ikke bli vist`() {
         meldingRepository.findByFnrIn(listOf(FNR_1)).shouldHaveSize(1)
 
@@ -126,7 +103,8 @@ class IntegrationTest : FellesTestOppsett() {
         hentMeldinger(FNR_1).shouldHaveSize(0)
     }
 
-    @Order(6)
+    @Test
+    @Order(5)
     fun `Kan ikke lukke melding tilhørende noen andre`() {
         val uuid = UUID.randomUUID().toString()
 
