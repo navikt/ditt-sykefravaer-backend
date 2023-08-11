@@ -1,5 +1,6 @@
 package no.nav.helse.flex
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -35,5 +36,23 @@ class ApiAuthTest : FellesTestOppsett() {
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
+    }
+
+    @Test
+    fun `tester at henting av vedtak fungerer med gammelt acr claim`() {
+        val response = authMedSpesifiktAcrClaim(fnr, "Level4")
+        assertThat(response).isEqualTo("200")
+    }
+
+    @Test
+    fun `tester at henting av vedtak fungerer med nytt acr claim`() {
+        val response = authMedSpesifiktAcrClaim(fnr, "idporten-loa-high")
+        assertThat(response).isEqualTo("200")
+    }
+
+    @Test
+    fun `tester at henting av vedtak ikke fungerer med tilfeldig valgt acr claim`() {
+        val response = authMedSpesifiktAcrClaim(fnr, "doNotLetMeIn")
+        assertThat(response).isEqualTo("401")
     }
 }

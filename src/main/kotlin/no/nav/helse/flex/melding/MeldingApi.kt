@@ -35,7 +35,7 @@ class MeldingApi(
 
     @GetMapping("/meldinger", produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
-    @ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun hentMeldinger(): List<MeldingRest> {
         val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
         return meldingRepository.findByFnrIn(listOf(fnr))
@@ -57,7 +57,7 @@ class MeldingApi(
 
     @PostMapping(value = ["/meldinger/{meldingUuid}/lukk"], produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
-    @ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun lukkMelding(@PathVariable meldingUuid: String): String {
         val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
 
