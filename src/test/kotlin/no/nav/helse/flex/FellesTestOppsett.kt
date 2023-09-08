@@ -94,13 +94,24 @@ abstract class FellesTestOppsett {
         return json
     }
 
+    fun authMedSpesifiktAcrClaim(fnr: String, acrClaim: String): String {
+        val responseCode = mockMvc.perform(
+            MockMvcRequestBuilders.get("/api/v1/meldinger")
+                .header("Authorization", "Bearer ${tokenxToken(fnr, acrClaim)}")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response.status
+
+        return responseCode.toString()
+    }
+
     fun tokenxToken(
         fnr: String,
+        acrClaim: String = "Level4",
         audience: String = "ditt-sykefravaer-backend-client-id",
         issuerId: String = "tokenx",
         clientId: String = "frontend-client-id",
         claims: Map<String, Any> = mapOf(
-            "acr" to "Level4",
+            "acr" to acrClaim,
             "idp" to "idporten",
             "client_id" to clientId,
             "pid" to fnr

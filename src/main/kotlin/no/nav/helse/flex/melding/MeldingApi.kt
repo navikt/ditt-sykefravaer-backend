@@ -35,7 +35,7 @@ class MeldingApi(
 
     @GetMapping("/meldinger", produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
-    @ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun hentMeldinger(): List<MeldingRest> {
         val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
         return meldingRepository.findByFnrIn(listOf(fnr))
@@ -57,7 +57,7 @@ class MeldingApi(
 
     @PostMapping(value = ["/meldinger/{meldingUuid}/lukk"], produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
-    @ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun lukkMelding(@PathVariable meldingUuid: String): String {
         val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
 
@@ -86,11 +86,6 @@ class MeldingApi(
         val clientId = claims.getStringClaim("client_id")
         if (clientId != dittSykefravaerFrontendClientId) {
             throw IngenTilgang("Uventet client id $clientId")
-        }
-        val idp = claims.getStringClaim("idp")
-        if (idp != dittSykefravaerFrontendTokenxIdp) {
-            // Sjekker at det var idporten som er IDP for tokenX tokenet
-            throw IngenTilgang("Uventet idp $idp")
         }
         return claims
     }
