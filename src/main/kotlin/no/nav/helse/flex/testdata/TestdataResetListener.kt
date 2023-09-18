@@ -1,5 +1,6 @@
 package no.nav.helse.flex.testdata
 
+import no.nav.helse.flex.inntektsmelding.InntektsmeldingRepository
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.melding.MeldingRepository
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("testdatareset")
-class TestdataResetListener(val meldingRepository: MeldingRepository) {
+class TestdataResetListener(val meldingRepository: MeldingRepository, val inntektsmeldingRepository: InntektsmeldingRepository) {
 
     val log = logger()
 
@@ -22,7 +23,9 @@ class TestdataResetListener(val meldingRepository: MeldingRepository) {
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val fnr = cr.value()
         val antall = meldingRepository.deleteByFnr(fnr)
+        val antallIm = inntektsmeldingRepository.deleteByFnr(fnr)
         log.info("Slettet $antall meldinger fnr: $fnr - Key ${cr.key()}.")
+        log.info("Slettet $antallIm inntektsmeldinger fnr: $fnr - Key ${cr.key()}.")
         acknowledgment.acknowledge()
     }
 }
