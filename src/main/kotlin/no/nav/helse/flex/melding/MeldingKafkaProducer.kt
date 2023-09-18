@@ -22,14 +22,4 @@ class MeldingKafkaProducer(
             )
         ).get()
     }
-
-    fun produserMelding(meldingUuid: String, meldingSomString: String): RecordMetadata {
-        return producer.send(
-            ProducerRecord(
-                dittSykefravaerMeldingTopic,
-                meldingUuid,
-                meldingSomString
-            )
-        ).get()
-    }
 }

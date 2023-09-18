@@ -13,5 +13,5 @@ data class InntektsmeldingDbRecord(
     val arbeidsgivertype: String,
     val inntektsmelding: String,
     val opprettet: Instant,
-    val mottattDato: Instant,
+    val mottattDato: Instant
 )

@@ -15,7 +15,6 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 ext["okhttp3.version"] = "4.11.0"
 
-
 repositories {
     mavenCentral()
     maven {
