@@ -16,8 +16,6 @@ class InntektsmeldingListener(
     @KafkaListener(
         topics = [inntektsmeldingTopic],
         containerFactory = "aivenKafkaListenerContainerFactory",
-        groupId = "ditt-sykefravaer-test",
-        properties = ["auto-offset-reset=earliest"]
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         lagreInntektsmeldingerFraKafka.oppdater(cr.value())
