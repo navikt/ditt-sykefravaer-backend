@@ -1,10 +1,11 @@
 package no.nav.helse.flex.inntektsmelding
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.objectMapper
-import no.nav.inntektsmeldingkontrakt.Inntektsmelding
+import no.nav.inntektsmeldingkontrakt.*
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Value
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDate
 
 @Controller
 @RequestMapping("/api/v1")
@@ -47,12 +50,23 @@ private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
     return RSInntektsmelding(
         mottattDato = this.mottattDato,
         beregnetInntekt = im.beregnetInntekt,
-        inntektsmeldingId = im.inntektsmeldingId
+        inntektsmeldingId = im.inntektsmeldingId,
+        arbeidsgiverperioder = im.arbeidsgiverperioder,
+        foersteFravaersdag = im.foersteFravaersdag,
+        refusjon = im.refusjon,
+        endringIRefusjoner = im.endringIRefusjoner,
+        opphoerAvNaturalytelser = im.opphoerAvNaturalytelser
     )
 }
 
 data class RSInntektsmelding(
     val mottattDato: Instant,
-    val beregnetInntekt: java.math.BigDecimal?,
-    val inntektsmeldingId: String
+    val inntektsmeldingId: String,
+    @field: JsonSerialize(using = PengeSerialiserer::class)
+    val beregnetInntekt: BigDecimal? = null,
+    val refusjon: Refusjon,
+    val endringIRefusjoner: List<EndringIRefusjon>,
+    val opphoerAvNaturalytelser: List<OpphoerAvNaturalytelse>,
+    val arbeidsgiverperioder: List<Periode>,
+    val foersteFravaersdag: LocalDate?
 )
