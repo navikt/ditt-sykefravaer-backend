@@ -119,7 +119,7 @@ val inntektsmelding = """
         "arkivreferanse": "AR13764323",
         "ferieperioder": [],
         "foersteFravaersdag": "2023-04-18",
-        "mottattDato": "2023-05-16T08:49:43Z",
+        "mottattDato": "2023-05-16T08:49:43",
         "naerRelasjon": true,
         "avsenderSystem": {
             "navn": "AltinnPortal",
