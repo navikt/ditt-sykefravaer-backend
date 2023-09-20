@@ -1,5 +1,7 @@
 package no.nav.helse.flex.melding
 
+import jakarta.annotation.PostConstruct
+import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.exception.AbstractApiError
 import no.nav.helse.flex.exception.LogLevel
 import no.nav.helse.flex.melding.domene.LukkMelding
@@ -7,7 +9,6 @@ import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.MeldingRest
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import no.nav.security.token.support.core.jwt.JwtTokenClaims
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -24,6 +25,7 @@ import java.time.Instant
 class MeldingApi(
     val meldingRepository: MeldingRepository,
     val tokenValidationContextHolder: TokenValidationContextHolder,
+
     val meldingKafkaProducer: MeldingKafkaProducer,
 
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
@@ -33,11 +35,19 @@ class MeldingApi(
     val dittSykefravaerFrontendTokenxIdp: String
 ) {
 
+    lateinit var tokenValidator: TokenValidator
+
+    @PostConstruct
+    fun init() {
+        tokenValidator = TokenValidator(tokenValidationContextHolder, dittSykefravaerFrontendClientId)
+    }
+
     @GetMapping("/meldinger", produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
     @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun hentMeldinger(): List<MeldingRest> {
-        val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
+        val claims = tokenValidator.validerTokenXClaims()
+        val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
         return meldingRepository.findByFnrIn(listOf(fnr))
             .filter { it.synligFremTil == null || it.synligFremTil.isAfter(Instant.now()) }
             .filter { it.lukket == null }
@@ -59,7 +69,8 @@ class MeldingApi(
     @ResponseBody
     @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
     fun lukkMelding(@PathVariable meldingUuid: String): String {
-        val fnr = validerTokenXClaims().fnrFraIdportenTokenX()
+        val claims = tokenValidator.validerTokenXClaims()
+        val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
 
         val meldingDbRecord = (
             meldingRepository.findByFnrIn(listOf(fnr))
@@ -79,28 +90,7 @@ class MeldingApi(
         )
         return "lukket"
     }
-
-    private fun validerTokenXClaims(): JwtTokenClaims {
-        val context = tokenValidationContextHolder.tokenValidationContext
-        val claims = context.getClaims("tokenx")
-        val clientId = claims.getStringClaim("client_id")
-        if (clientId != dittSykefravaerFrontendClientId) {
-            throw IngenTilgang("Uventet client id $clientId")
-        }
-        return claims
-    }
-
-    private fun JwtTokenClaims.fnrFraIdportenTokenX(): String {
-        return this.getStringClaim("pid")
-    }
 }
-
-private class IngenTilgang(override val message: String) : AbstractApiError(
-    message = message,
-    httpStatus = HttpStatus.FORBIDDEN,
-    reason = "INGEN_TILGANG",
-    loglevel = LogLevel.WARN
-)
 
 private class FeilUuidForLukking : AbstractApiError(
     message = "Forsøker å lukke uuid vi ikke finner i databasen",
