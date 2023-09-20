@@ -54,9 +54,6 @@ class InntektsmeldingTest : FellesTestOppsett() {
         val savedInntektsmelding = fetchedInntektsmeldings.first()
 
         savedInntektsmelding.inntektsmeldingId `should be equal to` "67e56f3c-6eee-4378-b9e3-ad8be6b7a111"
-        savedInntektsmelding.fnr `should be equal to` fnr
-        savedInntektsmelding.arbeidsgivertype `should be equal to` "VIRKSOMHET"
-        savedInntektsmelding.inntektsmelding `should be equal to` inntektsmelding
     }
 
     private fun setupTest() {
@@ -79,7 +76,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
         ).get()
     }
 
-    fun hentInntektsmeldinger(fnr: String): List<InntektsmeldingDbRecord> {
+    fun hentInntektsmeldinger(fnr: String): List<RSInntektsmelding> {
         val json = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr)}")

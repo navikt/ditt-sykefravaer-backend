@@ -44,7 +44,15 @@ class InntektsmeldingApi(
 
 private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
     val im: Inntektsmelding = objectMapper.readValue(this.inntektsmelding)
-    return RSInntektsmelding(mottattDato = this.mottattDato, beregnetInntekt = im.beregnetInntekt)
+    return RSInntektsmelding(
+        mottattDato = this.mottattDato,
+        beregnetInntekt = im.beregnetInntekt,
+        inntektsmeldingId = im.inntektsmeldingId
+    )
 }
 
-data class RSInntektsmelding(val mottattDato: Instant, val beregnetInntekt: java.math.BigDecimal?)
+data class RSInntektsmelding(
+    val mottattDato: Instant,
+    val beregnetInntekt: java.math.BigDecimal?,
+    val inntektsmeldingId: String
+)
