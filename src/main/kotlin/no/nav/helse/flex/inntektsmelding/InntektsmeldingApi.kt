@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.objectMapper
+import no.nav.helse.flex.organisasjon.LeggTilOrganisasjonnavn
 import no.nav.inntektsmeldingkontrakt.*
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -24,7 +25,8 @@ class InntektsmeldingApi(
     val inntektsmeldingRepository: InntektsmeldingRepository,
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
     val dittSykefravaerFrontendClientId: String,
-    val tokenValidationContextHolder: TokenValidationContextHolder
+    val tokenValidationContextHolder: TokenValidationContextHolder,
+    val leggTilOrganisasjonnavn: LeggTilOrganisasjonnavn
 ) {
     lateinit var tokenValidator: TokenValidator
 
@@ -39,9 +41,11 @@ class InntektsmeldingApi(
     fun getInntektsmeldinger(): List<RSInntektsmelding> {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
-        return inntektsmeldingRepository.findByFnrIn(listOf(fnr))
+        val inntektsmeldinger = inntektsmeldingRepository.findByFnrIn(listOf(fnr))
             .filter { it.arbeidsgivertype == "VIRKSOMHET" }
             .map { it.tilRsInntektsmelding() }
+
+        return leggTilOrganisasjonnavn.leggTilOrganisasjonnavn(inntektsmeldinger)
     }
 }
 
@@ -56,7 +60,7 @@ private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
         refusjon = im.refusjon,
         endringIRefusjoner = im.endringIRefusjoner,
         opphoerAvNaturalytelser = im.opphoerAvNaturalytelser,
-        organisasjonsnavn = im.virksomhetsnummer + " navn"
+        organisasjonsnavn = im.virksomhetsnummer ?: "Ukjent"
     )
 }
 
