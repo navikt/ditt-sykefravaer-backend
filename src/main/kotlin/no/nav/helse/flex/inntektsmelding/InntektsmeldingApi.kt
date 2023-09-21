@@ -55,18 +55,20 @@ private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
         foersteFravaersdag = im.foersteFravaersdag,
         refusjon = im.refusjon,
         endringIRefusjoner = im.endringIRefusjoner,
-        opphoerAvNaturalytelser = im.opphoerAvNaturalytelser
+        opphoerAvNaturalytelser = im.opphoerAvNaturalytelser,
+        organisasjonsnavn = im.virksomhetsnummer + " navn"
     )
 }
 
 data class RSInntektsmelding(
-    val mottattDato: Instant,
+    val organisasjonsnavn: String,
     val inntektsmeldingId: String,
     @field: JsonSerialize(using = PengeSerialiserer::class)
     val beregnetInntekt: BigDecimal? = null,
-    val refusjon: Refusjon,
+    val foersteFravaersdag: LocalDate?,
+    val mottattDato: Instant,
+    val arbeidsgiverperioder: List<Periode>,
     val endringIRefusjoner: List<EndringIRefusjon>,
     val opphoerAvNaturalytelser: List<OpphoerAvNaturalytelse>,
-    val arbeidsgiverperioder: List<Periode>,
-    val foersteFravaersdag: LocalDate?
+    val refusjon: Refusjon
 )
