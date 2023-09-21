@@ -1,7 +1,11 @@
 package no.nav.helse.flex.inntektsmelding
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
+import no.nav.helse.flex.objectMapper
+import no.nav.inntektsmeldingkontrakt.*
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Value
@@ -10,6 +14,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.math.BigDecimal
+import java.time.Instant
+import java.time.LocalDate
 
 @Controller
 @RequestMapping("/api/v1")
@@ -29,9 +36,39 @@ class InntektsmeldingApi(
     @GetMapping("/inntektsmeldinger", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
-    fun getInntektsmeldinger(): List<InntektsmeldingDbRecord> {
+    fun getInntektsmeldinger(): List<RSInntektsmelding> {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
         return inntektsmeldingRepository.findByFnrIn(listOf(fnr))
+            .filter { it.arbeidsgivertype == "VIRKSOMHET" }
+            .map { it.tilRsInntektsmelding() }
     }
 }
+
+private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
+    val im: Inntektsmelding = objectMapper.readValue(this.inntektsmelding)
+    return RSInntektsmelding(
+        mottattDato = this.mottattDato,
+        beregnetInntekt = im.beregnetInntekt,
+        inntektsmeldingId = im.inntektsmeldingId,
+        arbeidsgiverperioder = im.arbeidsgiverperioder,
+        foersteFravaersdag = im.foersteFravaersdag,
+        refusjon = im.refusjon,
+        endringIRefusjoner = im.endringIRefusjoner,
+        opphoerAvNaturalytelser = im.opphoerAvNaturalytelser,
+        organisasjonsnavn = im.virksomhetsnummer + " navn"
+    )
+}
+
+data class RSInntektsmelding(
+    val organisasjonsnavn: String,
+    val inntektsmeldingId: String,
+    @field: JsonSerialize(using = PengeSerialiserer::class)
+    val beregnetInntekt: BigDecimal? = null,
+    val foersteFravaersdag: LocalDate?,
+    val mottattDato: Instant,
+    val arbeidsgiverperioder: List<Periode>,
+    val endringIRefusjoner: List<EndringIRefusjon>,
+    val opphoerAvNaturalytelser: List<OpphoerAvNaturalytelse>,
+    val refusjon: Refusjon
+)
