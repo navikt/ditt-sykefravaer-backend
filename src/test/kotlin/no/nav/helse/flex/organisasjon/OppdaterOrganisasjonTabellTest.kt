@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class UpdateOrganisasjonTabellTest : FellesTestOppsett() {
+class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
 
     @Autowired
     lateinit var producer: KafkaProducer<String, String>
