@@ -69,7 +69,8 @@ class InntektsmeldingTest : FellesTestOppsett() {
                 navn = orgnavn,
                 opprettet = Instant.now(),
                 oppdatert = Instant.now(),
-                oppdatertAv = "test")
+                oppdatertAv = "test"
+            )
         )
         setupTest()
 
