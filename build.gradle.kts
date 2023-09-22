@@ -27,6 +27,7 @@ val tokenSupportVersion = "3.1.5"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2023.06.20-08-54-d1c6c"
+val sykepengesoknadKafkaVersion = "2023.09.04-15.15-3fc4449e"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -45,6 +46,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("no.nav.sykepenger.kontrakter:inntektsmelding-kontrakt:$inntektsmeldingKontraktVersion")
+    implementation("no.nav.helse.flex:sykepengesoknad-kafka:$sykepengesoknadKafkaVersion")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")

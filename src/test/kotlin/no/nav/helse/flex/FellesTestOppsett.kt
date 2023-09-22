@@ -3,6 +3,7 @@ package no.nav.helse.flex
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.melding.MeldingRepository
 import no.nav.helse.flex.melding.domene.MeldingRest
+import no.nav.helse.flex.organisasjon.OrganisasjonRepository
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -34,6 +35,9 @@ abstract class FellesTestOppsett {
 
     @Autowired
     lateinit var meldingRepository: MeldingRepository
+
+    @Autowired
+    lateinit var organisasjonRepository: OrganisasjonRepository
 
     @Autowired
     lateinit var mockMvc: MockMvc
