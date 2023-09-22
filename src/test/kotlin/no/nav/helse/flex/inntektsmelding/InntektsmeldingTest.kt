@@ -3,6 +3,7 @@ package no.nav.helse.flex.inntektsmelding
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.FellesTestOppsett
 import no.nav.helse.flex.objectMapper
+import no.nav.helse.flex.organisasjon.Organisasjon
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldHaveSize
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -54,6 +56,26 @@ class InntektsmeldingTest : FellesTestOppsett() {
         val savedInntektsmelding = fetchedInntektsmeldings.first()
 
         savedInntektsmelding.inntektsmeldingId `should be equal to` "67e56f3c-6eee-4378-b9e3-ad8be6b7a111"
+    }
+
+    @Test
+    fun `tester mapping av orgnummer til orgnavn ved innsending av inntektsmelding`() {
+        val orgnummer = "910825585"
+        val orgnavn = "Test Organisasjon"
+
+        organisasjonRepository.save(
+            Organisasjon(
+                orgnummer = orgnummer,
+                navn = orgnavn,
+                opprettet = Instant.now(),
+                oppdatert = Instant.now(),
+                oppdatertAv = "test")
+        )
+        setupTest()
+
+        val fetchedInntektsmeldings = hentInntektsmeldinger(fnr)
+        fetchedInntektsmeldings.shouldHaveSize(1)
+        fetchedInntektsmeldings[0].organisasjonsnavn `should be equal to` orgnavn
     }
 
     private fun setupTest() {
