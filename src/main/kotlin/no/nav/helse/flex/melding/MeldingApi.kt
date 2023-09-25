@@ -29,10 +29,8 @@ class MeldingApi(
     val meldingKafkaProducer: MeldingKafkaProducer,
 
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
-    val dittSykefravaerFrontendClientId: String,
+    val dittSykefravaerFrontendClientId: String
 
-    @Value("\${DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP}")
-    val dittSykefravaerFrontendTokenxIdp: String
 ) {
 
     lateinit var tokenValidator: TokenValidator

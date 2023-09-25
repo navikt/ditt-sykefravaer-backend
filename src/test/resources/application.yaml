@@ -19,7 +19,6 @@ spring:
       maximum-pool-size: 3
 
 DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID: frontend-client-id
-DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP: idporten
 
 management:
   endpoint.prometheus.enabled: true
