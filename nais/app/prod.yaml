@@ -8,4 +8,3 @@ db_tier: db-custom-1-3840
 env:
   SPRING_PROFILES_ACTIVE: default
   DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID: prod-gcp:flex:ditt-sykefravaer
-  DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP: https://oidc.difi.no/idporten-oidc-provider/

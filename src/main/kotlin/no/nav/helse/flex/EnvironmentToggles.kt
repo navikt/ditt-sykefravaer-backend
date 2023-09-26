@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-public class EnvironmentToggles(
-    @Value("\${nais.cluster}") private val naisCluster: String
+class EnvironmentToggles(
+    @Value("\${NAIS_CLUSTER_NAME}") private val naisCluster: String
 ) {
-    public fun isProduction() = "prod-gcp" == naisCluster
+    fun isProduction() = "prod-gcp" == naisCluster
 
-    public fun isDevelopment() = !isProduction()
+    fun isDevelopment() = !isProduction()
 }

@@ -122,6 +122,8 @@ val inntektsmelding = """
         "arbeidsgivertype": "VIRKSOMHET",
         "arbeidsforholdId": "123456789",
         "beregnetInntekt": "52000.00",
+        "innsenderFulltNavn": "Test Testesen",
+        "innsenderTelefon": "12345",
         "refusjon": {
             "beloepPrMnd": null,
             "opphoersdato": null

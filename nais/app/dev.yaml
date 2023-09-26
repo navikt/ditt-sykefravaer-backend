@@ -8,5 +8,4 @@ db_tier: db-f1-micro
 env:
   SPRING_PROFILES_ACTIVE: default,testdatareset
   DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID: dev-gcp:flex:ditt-sykefravaer
-  DITT_SYKEFRAVAER_FRONTEND_TOKENX_IDP: https://oidc-ver2.difi.no/idporten-oidc-provider/
   AIVEN_KAFKA_AUTO_OFFSET_RESET: latest
