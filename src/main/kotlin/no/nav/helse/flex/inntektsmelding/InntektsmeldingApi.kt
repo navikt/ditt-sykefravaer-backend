@@ -81,5 +81,5 @@ data class RSInntektsmelding(
     val begrunnelseForReduksjonEllerIkkeUtbetalt: String?,
     @field: JsonSerialize(using = PengeSerialiserer::class)
     val bruttoUtbetalt: BigDecimal?,
-    val innsenderFulltNavn: String?
+    val innsenderFulltNavn: String
 )
