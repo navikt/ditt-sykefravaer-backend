@@ -27,7 +27,7 @@ val tokenSupportVersion = "3.1.5"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2023.09.21-02-30-3f310"
-val sykepengesoknadKafkaVersion = "2023.09.04-15.15-3fc4449e"
+val sykepengesoknadKafkaVersion = "2023.09.18-14.15-7ea2dc46"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
