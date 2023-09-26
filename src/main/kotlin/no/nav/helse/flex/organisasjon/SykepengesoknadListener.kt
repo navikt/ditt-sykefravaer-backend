@@ -15,8 +15,7 @@ class SykepengesoknadListener(
 
     @KafkaListener(
         topics = [FLEX_SYKEPENGESOKNAD_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory",
-        properties = ["auto.offset.reset = earliest"]
+        containerFactory = "aivenKafkaListenerContainerFactory"
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val soknad = cr.value().tilSykepengesoknadDTO()
