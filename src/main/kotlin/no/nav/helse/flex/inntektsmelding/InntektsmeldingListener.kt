@@ -29,6 +29,7 @@ class InntektsmeldingListener(
         }
         try {
             val deserialisertIm: Inntektsmelding = objectMapper.readValue(cr.value())
+            deserialisertIm.toString()
         } catch (e: Exception) {
             log.error("Kunne ikke deserialisere inntektsmelding", e)
             acknowledgment.acknowledge()
