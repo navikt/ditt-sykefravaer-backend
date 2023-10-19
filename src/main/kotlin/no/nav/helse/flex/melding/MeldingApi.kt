@@ -1,5 +1,6 @@
 package no.nav.helse.flex.melding
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.exception.AbstractApiError
@@ -22,6 +23,7 @@ import java.time.Instant
 
 @Controller
 @RequestMapping("/api/v1")
+@Tag(name = "meldinger", description = "Henting og lukking av meldinger på ditt sykefravær")
 class MeldingApi(
     val meldingRepository: MeldingRepository,
     val tokenValidationContextHolder: TokenValidationContextHolder,
