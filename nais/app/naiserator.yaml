@@ -36,6 +36,9 @@ spec:
     inbound:
       rules:
         - application: ditt-sykefravaer
+        {{#if flex-openapi-docs-ui}}
+        - application: flex-openapi-docs-ui
+        {{/if}}
   gcp:
     sqlInstances:
       - type: POSTGRES_14
