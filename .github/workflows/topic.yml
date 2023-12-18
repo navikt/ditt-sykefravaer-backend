@@ -8,14 +8,15 @@ jobs:
   deploy-topic-to-dev:
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/dev-')
     name: Deploy topic to dev-gcp
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Deploy ditt-sykefravaer-melding topic to dev-gcp
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/ditt-sykefravaer-melding.yaml
           VARS: nais/topics/dev.json
@@ -23,14 +24,15 @@ jobs:
   deploy-topic-to-prod:
     if: github.ref == 'refs/heads/master'
     name: Deploy topic to prod-gcp
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Deploy ditt-sykefravaer-melding topic to prod-gcp
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: nais/topics/ditt-sykefravaer-melding.yaml
           VARS: nais/topics/prod.json
