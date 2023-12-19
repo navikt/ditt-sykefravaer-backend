@@ -24,6 +24,7 @@ class MeldingListener(
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         try {
+            log.info("Mottok melding: ${cr.key()} - ${cr.value()}")
             oppdaterMeldingerFraKafka.oppdater(cr.key(), objectMapper.readValue(cr.value()))
             acknowledgment.acknowledge()
         } catch (e: Exception) {
