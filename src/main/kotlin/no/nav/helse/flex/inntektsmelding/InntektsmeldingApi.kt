@@ -28,7 +28,7 @@ class InntektsmeldingApi(
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
     val dittSykefravaerFrontendClientId: String,
     val tokenValidationContextHolder: TokenValidationContextHolder,
-    val leggTilOrganisasjonnavn: LeggTilOrganisasjonnavn
+    val leggTilOrganisasjonnavn: LeggTilOrganisasjonnavn,
 ) {
     lateinit var tokenValidator: TokenValidator
 
@@ -43,9 +43,10 @@ class InntektsmeldingApi(
     fun getInntektsmeldinger(): List<RSInntektsmelding> {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
-        val inntektsmeldinger = inntektsmeldingRepository.findByFnrIn(listOf(fnr))
-            .filter { it.arbeidsgivertype == "VIRKSOMHET" }
-            .map { it.tilRsInntektsmelding() }
+        val inntektsmeldinger =
+            inntektsmeldingRepository.findByFnrIn(listOf(fnr))
+                .filter { it.arbeidsgivertype == "VIRKSOMHET" }
+                .map { it.tilRsInntektsmelding() }
 
         return leggTilOrganisasjonnavn.leggTilOrganisasjonnavn(inntektsmeldinger)
     }
@@ -65,14 +66,14 @@ private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
         organisasjonsnavn = im.virksomhetsnummer ?: "Ukjent",
         begrunnelseForReduksjonEllerIkkeUtbetalt = im.begrunnelseForReduksjonEllerIkkeUtbetalt,
         bruttoUtbetalt = im.bruttoUtbetalt,
-        innsenderFulltNavn = im.innsenderFulltNavn
+        innsenderFulltNavn = im.innsenderFulltNavn,
     )
 }
 
 data class RSInntektsmelding(
     val organisasjonsnavn: String,
     val inntektsmeldingId: String,
-    @field: JsonSerialize(using = PengeSerialiserer::class)
+    @field:JsonSerialize(using = PengeSerialiserer::class)
     val beregnetInntekt: BigDecimal?,
     val foersteFravaersdag: LocalDate?,
     val mottattDato: Instant,
@@ -81,7 +82,7 @@ data class RSInntektsmelding(
     val opphoerAvNaturalytelser: List<OpphoerAvNaturalytelse>,
     val refusjon: Refusjon,
     val begrunnelseForReduksjonEllerIkkeUtbetalt: String?,
-    @field: JsonSerialize(using = PengeSerialiserer::class)
+    @field:JsonSerialize(using = PengeSerialiserer::class)
     val bruttoUtbetalt: BigDecimal?,
-    val innsenderFulltNavn: String
+    val innsenderFulltNavn: String,
 )

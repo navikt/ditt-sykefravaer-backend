@@ -6,14 +6,15 @@ import org.springframework.stereotype.Component
 
 @Component
 class LeggTilOrganisasjonnavn(
-    private val organisasjonRepository: OrganisasjonRepository
+    private val organisasjonRepository: OrganisasjonRepository,
 ) {
     val log = logger()
 
     fun leggTilOrganisasjonnavn(inntektsmeldingene: List<RSInntektsmelding>): List<RSInntektsmelding> {
-        val orgnummerene = inntektsmeldingene
-            .mapNotNull { it.organisasjonsnavn }
-            .toSet()
+        val orgnummerene =
+            inntektsmeldingene
+                .mapNotNull { it.organisasjonsnavn }
+                .toSet()
 
         val organisasjoner = assosierOrgNummerMedOrgNavn(orgnummerene)
 

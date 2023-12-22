@@ -10,9 +10,8 @@ import java.time.ZoneId
 
 @Component
 class LagreInntektsmeldingerFraKafka(
-    val inntektsmeldingRepository: InntektsmeldingRepository
+    val inntektsmeldingRepository: InntektsmeldingRepository,
 ) {
-
     val log = logger()
 
     fun oppdater(value: String) {
@@ -29,8 +28,8 @@ class LagreInntektsmeldingerFraKafka(
                 opprettet = Instant.now(),
                 fnr = deserialisertIm.arbeidstakerFnr,
                 arbeidsgivertype = deserialisertIm.arbeidsgivertype.toString(),
-                inntektsmelding = value
-            )
+                inntektsmelding = value,
+            ),
         )
         log.info("Lagret inntektsmelding med id ${deserialisertIm.inntektsmeldingId} i databasen")
     }

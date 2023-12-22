@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface InntektsmeldingRepository : CrudRepository<InntektsmeldingDbRecord, String> {
-
     fun findByFnrIn(fnrs: List<String>): List<InntektsmeldingDbRecord>
 
     @Modifying

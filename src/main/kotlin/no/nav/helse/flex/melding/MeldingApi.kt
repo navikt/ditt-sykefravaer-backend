@@ -27,14 +27,10 @@ import java.time.Instant
 class MeldingApi(
     val meldingRepository: MeldingRepository,
     val tokenValidationContextHolder: TokenValidationContextHolder,
-
     val meldingKafkaProducer: MeldingKafkaProducer,
-
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
-    val dittSykefravaerFrontendClientId: String
-
+    val dittSykefravaerFrontendClientId: String,
 ) {
-
     lateinit var tokenValidator: TokenValidator
 
     @PostConstruct
@@ -60,7 +56,7 @@ class MeldingApi(
                     variant = it.variant.lowercase(),
                     lukkbar = it.lukkbar,
                     meldingType = it.meldingType,
-                    opprettet = it.opprettet
+                    opprettet = it.opprettet,
                 )
             }
     }
@@ -68,7 +64,9 @@ class MeldingApi(
     @PostMapping(value = ["/meldinger/{meldingUuid}/lukk"], produces = [APPLICATION_JSON_VALUE])
     @ResponseBody
     @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
-    fun lukkMelding(@PathVariable meldingUuid: String): String {
+    fun lukkMelding(
+        @PathVariable meldingUuid: String,
+    ): String {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
 
@@ -76,7 +74,7 @@ class MeldingApi(
             meldingRepository.findByFnrIn(listOf(fnr))
                 .firstOrNull { it.meldingUuid == meldingUuid }
                 ?: throw FeilUuidForLukking()
-            )
+        )
         if (!meldingDbRecord.lukkbar) {
             throw IkkeLukkbar()
         }
@@ -85,8 +83,8 @@ class MeldingApi(
             MeldingKafkaDto(
                 fnr = meldingDbRecord.fnr,
                 opprettMelding = null,
-                lukkMelding = LukkMelding(timestamp = Instant.now())
-            )
+                lukkMelding = LukkMelding(timestamp = Instant.now()),
+            ),
         )
         return "lukket"
     }
@@ -96,12 +94,12 @@ private class FeilUuidForLukking : AbstractApiError(
     message = "Forsøker å lukke uuid vi ikke finner i databasen",
     httpStatus = HttpStatus.BAD_REQUEST,
     reason = "FEIL_UUID_FOR_LUKKING",
-    loglevel = LogLevel.WARN
+    loglevel = LogLevel.WARN,
 )
 
 private class IkkeLukkbar : AbstractApiError(
     message = "Forsøker å lukke melding som ikke er lukkbar",
     httpStatus = HttpStatus.BAD_REQUEST,
     reason = "IKKE_LUKKBAR",
-    loglevel = LogLevel.WARN
+    loglevel = LogLevel.WARN,
 )

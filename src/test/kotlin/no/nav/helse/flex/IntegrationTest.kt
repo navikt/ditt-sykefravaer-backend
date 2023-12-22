@@ -25,25 +25,26 @@ private const val FNR_1 = "fnr-1"
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest : FellesTestOppsett() {
-
     @Autowired
     lateinit var meldingKafkaProducer: MeldingKafkaProducer
 
     @Test
     @Order(1)
     fun `Mottar melding`() {
-        val kafkaMelding = MeldingKafkaDto(
-            fnr = FNR_1,
-            opprettMelding = OpprettMelding(
-                tekst = "Melding 1",
-                lenke = "http://www.nav.no",
-                meldingType = "whatever",
-                synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
-                variant = Variant.INFO,
-                lukkbar = true
-            ),
-            lukkMelding = null
-        )
+        val kafkaMelding =
+            MeldingKafkaDto(
+                fnr = FNR_1,
+                opprettMelding =
+                    OpprettMelding(
+                        tekst = "Melding 1",
+                        lenke = "http://www.nav.no",
+                        meldingType = "whatever",
+                        synligFremTil = Instant.now().plus(2, ChronoUnit.DAYS),
+                        variant = Variant.INFO,
+                        lukkbar = true,
+                    ),
+                lukkMelding = null,
+            )
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
@@ -81,18 +82,20 @@ class IntegrationTest : FellesTestOppsett() {
     fun `Melding med synlig-frem-til i fortiden vil ikke bli vist`() {
         meldingRepository.findByFnrIn(listOf(FNR_1)).shouldHaveSize(1)
 
-        val kafkaMelding = MeldingKafkaDto(
-            fnr = FNR_1,
-            opprettMelding = OpprettMelding(
-                tekst = "Melding 3",
-                lenke = "http://www.nav.no",
-                meldingType = "whatever",
-                synligFremTil = Instant.now().minusSeconds(2),
-                variant = Variant.INFO,
-                lukkbar = true
-            ),
-            lukkMelding = null
-        )
+        val kafkaMelding =
+            MeldingKafkaDto(
+                fnr = FNR_1,
+                opprettMelding =
+                    OpprettMelding(
+                        tekst = "Melding 3",
+                        lenke = "http://www.nav.no",
+                        meldingType = "whatever",
+                        synligFremTil = Instant.now().minusSeconds(2),
+                        variant = Variant.INFO,
+                        lukkbar = true,
+                    ),
+                lukkMelding = null,
+            )
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
@@ -111,7 +114,7 @@ class IntegrationTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/meldinger/$uuid/lukk")
                 .header("Authorization", "Bearer ${tokenxToken(FNR_1)}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 }

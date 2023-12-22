@@ -17,5 +17,5 @@ data class MeldingDbRecord(
     val lukkbar: Boolean,
     val opprettet: Instant,
     val synligFremTil: Instant?,
-    val lukket: Instant?
+    val lukket: Instant?,
 )
