@@ -7,17 +7,19 @@ import org.springframework.stereotype.Component
 
 @Component
 class InntektsmeldingListener(
-    val lagreInntektsmeldingerFraKafka: LagreInntektsmeldingerFraKafka
+    val lagreInntektsmeldingerFraKafka: LagreInntektsmeldingerFraKafka,
 ) {
-
     @KafkaListener(
-        topics = [inntektsmeldingTopic],
-        containerFactory = "aivenKafkaListenerContainerFactory"
+        topics = [INNTEKTSMELDING_TOPIC],
+        containerFactory = "aivenKafkaListenerContainerFactory",
     )
-    fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun listen(
+        cr: ConsumerRecord<String, String>,
+        acknowledgment: Acknowledgment,
+    ) {
         lagreInntektsmeldingerFraKafka.oppdater(cr.value())
         acknowledgment.acknowledge()
     }
 }
 
-const val inntektsmeldingTopic = "helsearbeidsgiver." + "privat-sykepenger-inntektsmelding"
+const val INNTEKTSMELDING_TOPIC = "helsearbeidsgiver." + "privat-sykepenger-inntektsmelding"

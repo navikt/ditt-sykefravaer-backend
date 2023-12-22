@@ -9,21 +9,21 @@ import java.time.Instant
 import java.util.*
 
 class MeldingRepositoryTest : FellesTestOppsett() {
-
     @Test
     fun testReposistory() {
-        val melding = MeldingDbRecord(
-            fnr = "12345",
-            opprettet = Instant.EPOCH,
-            lukket = null,
-            tekst = "Heyyy",
-            lenke = "http://heisann",
-            meldingType = "hoi",
-            synligFremTil = Instant.now(),
-            meldingUuid = UUID.randomUUID().toString(),
-            variant = Variant.INFO.toString(),
-            lukkbar = true
-        )
+        val melding =
+            MeldingDbRecord(
+                fnr = "12345",
+                opprettet = Instant.EPOCH,
+                lukket = null,
+                tekst = "Heyyy",
+                lenke = "http://heisann",
+                meldingType = "hoi",
+                synligFremTil = Instant.now(),
+                meldingUuid = UUID.randomUUID().toString(),
+                variant = Variant.INFO.toString(),
+                lukkbar = true,
+            )
         meldingRepository.save(melding)
 
         meldingRepository.count() `should be equal to` 1

@@ -9,5 +9,5 @@ data class MeldingRest(
     val variant: String,
     val lukkbar: Boolean,
     val meldingType: String,
-    val opprettet: Instant
+    val opprettet: Instant,
 )

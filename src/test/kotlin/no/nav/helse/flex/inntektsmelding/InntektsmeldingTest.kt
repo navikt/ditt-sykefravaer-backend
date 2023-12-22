@@ -22,7 +22,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class InntektsmeldingTest : FellesTestOppsett() {
-
     @Autowired
     lateinit var inntektsmeldingRepository: InntektsmeldingRepository
 
@@ -69,8 +68,8 @@ class InntektsmeldingTest : FellesTestOppsett() {
                 navn = orgnavn,
                 opprettet = Instant.now(),
                 oppdatert = Instant.now(),
-                oppdatertAv = "test"
-            )
+                oppdatertAv = "test",
+            ),
         )
         setupTest()
 
@@ -89,28 +88,33 @@ class InntektsmeldingTest : FellesTestOppsett() {
         inntektsmeldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
     }
 
-    fun produserMelding(meldingUuid: String, melding: String): RecordMetadata {
+    fun produserMelding(
+        meldingUuid: String,
+        melding: String,
+    ): RecordMetadata {
         return producer.send(
             ProducerRecord(
-                inntektsmeldingTopic,
+                INNTEKTSMELDING_TOPIC,
                 meldingUuid,
-                melding
-            )
+                melding,
+            ),
         ).get()
     }
 
     fun hentInntektsmeldinger(fnr: String): List<RSInntektsmelding> {
-        val json = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+        val json =
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         return objectMapper.readValue(json)
     }
 }
 
-val inntektsmelding = """
+val inntektsmelding =
+    """
     {
         "inntektsmeldingId": "67e56f3c-6eee-4378-b9e3-ad8be6b7a111",
         "arbeidstakerFnr": "12345678787",
@@ -148,4 +152,4 @@ val inntektsmelding = """
             "versjon": "1.489"
         }
     }
-""".trimIndent()
+    """.trimIndent()

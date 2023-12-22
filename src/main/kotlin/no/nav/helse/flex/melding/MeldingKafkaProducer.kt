@@ -1,6 +1,6 @@
 package no.nav.helse.flex.melding
 
-import no.nav.helse.flex.kafka.dittSykefravaerMeldingTopic
+import no.nav.helse.flex.kafka.DITT_SYKEFRAVAER_MELDING_TOPIC
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.serialisertTilString
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -10,16 +10,18 @@ import org.springframework.stereotype.Component
 
 @Component
 class MeldingKafkaProducer(
-    private val producer: KafkaProducer<String, String>
+    private val producer: KafkaProducer<String, String>,
 ) {
-
-    fun produserMelding(meldingUuid: String, meldingKafkaDto: MeldingKafkaDto): RecordMetadata {
+    fun produserMelding(
+        meldingUuid: String,
+        meldingKafkaDto: MeldingKafkaDto,
+    ): RecordMetadata {
         return producer.send(
             ProducerRecord(
-                dittSykefravaerMeldingTopic,
+                DITT_SYKEFRAVAER_MELDING_TOPIC,
                 meldingUuid,
-                meldingKafkaDto.serialisertTilString()
-            )
+                meldingKafkaDto.serialisertTilString(),
+            ),
         ).get()
     }
 }

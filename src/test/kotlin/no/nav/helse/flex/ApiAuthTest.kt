@@ -7,7 +7,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 class ApiAuthTest : FellesTestOppsett() {
-
     val fnr = "12343787332"
 
     @Test
@@ -15,7 +14,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/meldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
@@ -24,7 +23,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/meldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isForbidden)
     }
 
@@ -33,7 +32,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/meldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
@@ -42,7 +41,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
@@ -51,7 +50,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isForbidden)
     }
 
@@ -60,7 +59,7 @@ class ApiAuthTest : FellesTestOppsett() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
                 .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 

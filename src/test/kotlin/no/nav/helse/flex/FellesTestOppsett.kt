@@ -32,7 +32,6 @@ private class PostgreSQLContainer14 : PostgreSQLContainer<PostgreSQLContainer14>
 @SpringBootTest(classes = [Application::class])
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE, printOnlyOnFailure = false)
 abstract class FellesTestOppsett {
-
     @Autowired
     lateinit var meldingRepository: MeldingRepository
 
@@ -46,7 +45,6 @@ abstract class FellesTestOppsett {
     lateinit var server: MockOAuth2Server
 
     companion object {
-
         init {
             val threads = mutableListOf<Thread>()
 
@@ -79,31 +77,40 @@ abstract class FellesTestOppsett {
     }
 
     fun hentMeldinger(fnr: String): List<MeldingRest> {
-        val json = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/meldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+        val json =
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/meldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         return objectMapper.readValue(json)
     }
 
-    fun lukkMelding(fnr: String, id: String): String {
-        val json = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/meldinger/$id/lukk")
-                .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+    fun lukkMelding(
+        fnr: String,
+        id: String,
+    ): String {
+        val json =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/meldinger/$id/lukk")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         return json
     }
 
-    fun authMedSpesifiktAcrClaim(fnr: String, acrClaim: String): String {
-        val responseCode = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/meldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr, acrClaim)}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn().response.status
+    fun authMedSpesifiktAcrClaim(
+        fnr: String,
+        acrClaim: String,
+    ): String {
+        val responseCode =
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/meldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr, acrClaim)}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andReturn().response.status
 
         return responseCode.toString()
     }
@@ -114,12 +121,13 @@ abstract class FellesTestOppsett {
         audience: String = "ditt-sykefravaer-backend-client-id",
         issuerId: String = "tokenx",
         clientId: String = "frontend-client-id",
-        claims: Map<String, Any> = mapOf(
-            "acr" to acrClaim,
-            "idp" to "idporten",
-            "client_id" to clientId,
-            "pid" to fnr
-        )
+        claims: Map<String, Any> =
+            mapOf(
+                "acr" to acrClaim,
+                "idp" to "idporten",
+                "client_id" to clientId,
+                "pid" to fnr,
+            ),
     ): String {
         return server.issueToken(
             issuerId,
@@ -129,8 +137,8 @@ abstract class FellesTestOppsett {
                 subject = UUID.randomUUID().toString(),
                 audience = listOf(audience),
                 claims = claims,
-                expiry = 3600
-            )
+                expiry = 3600,
+            ),
         ).serialize()
     }
 }

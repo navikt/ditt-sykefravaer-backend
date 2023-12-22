@@ -7,10 +7,12 @@ import java.time.Instant
 
 @Component
 class OppdaterMeldingerFraKafka(
-    val meldingRepository: MeldingRepository
+    val meldingRepository: MeldingRepository,
 ) {
-
-    fun oppdater(meldingUuid: String, meldingKafkaDto: MeldingKafkaDto) {
+    fun oppdater(
+        meldingUuid: String,
+        meldingKafkaDto: MeldingKafkaDto,
+    ) {
         if (meldingKafkaDto.lukkMelding == null && meldingKafkaDto.opprettMelding == null) {
             throw RuntimeException("$meldingUuid må ha lukkMelding eller opprettMelding ")
         }
@@ -32,13 +34,14 @@ class OppdaterMeldingerFraKafka(
                     meldingType = meldingKafkaDto.opprettMelding.meldingType,
                     lenke = meldingKafkaDto.opprettMelding.lenke,
                     variant = meldingKafkaDto.opprettMelding.variant.toString(),
-                    lukkbar = meldingKafkaDto.opprettMelding.lukkbar
-                )
+                    lukkbar = meldingKafkaDto.opprettMelding.lukkbar,
+                ),
             )
         }
         if (meldingKafkaDto.lukkMelding != null) {
-            val dbMelding = meldingRepository.findByMeldingUuid(meldingUuid)
-                ?: throw RuntimeException("$meldingUuid skal eksistere i databasen!")
+            val dbMelding =
+                meldingRepository.findByMeldingUuid(meldingUuid)
+                    ?: throw RuntimeException("$meldingUuid skal eksistere i databasen!")
             if (dbMelding.lukket != null) {
                 return
             }
