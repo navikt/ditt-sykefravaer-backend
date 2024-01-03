@@ -26,7 +26,7 @@ val testContainersVersion = "1.19.1"
 val tokenSupportVersion = "3.2.0"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
-val inntektsmeldingKontraktVersion = "2023.10.13-04-47-c372d"
+val inntektsmeldingKontraktVersion = "2023.12.13-04-13-2ca03"
 val sykepengesoknadKafkaVersion = "2023.12.05-10.16-3ffa06f7"
 
 dependencies {
