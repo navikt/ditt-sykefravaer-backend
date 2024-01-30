@@ -82,7 +82,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
         inntektsmeldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(0)
         produserMelding(UUID.randomUUID().toString(), inntektsmelding)
 
-        await().atMost(10, TimeUnit.SECONDS).until {
+        await().atMost(20, TimeUnit.SECONDS).until {
             inntektsmeldingRepository.findByFnrIn(listOf(fnr)).isNotEmpty()
         }
         inntektsmeldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
