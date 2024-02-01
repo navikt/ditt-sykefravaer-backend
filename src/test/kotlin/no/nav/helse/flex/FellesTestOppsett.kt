@@ -50,7 +50,6 @@ abstract class FellesTestOppsett {
 
             thread {
                 KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1")).apply {
-//                    this.withEnv("KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS", "2")
                     start()
                     System.setProperty("KAFKA_BROKERS", bootstrapServers)
                 }
