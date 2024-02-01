@@ -7,12 +7,10 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldBeNull
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
     @Autowired
@@ -38,7 +36,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
 
         sendSykepengesoknad(soknad)
 
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksEttMinutt.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -67,7 +65,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!).shouldBeNull()
 
         sendSykepengesoknad(soknad)
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksEttMinutt.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
         val org = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
@@ -84,7 +82,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
                     ),
             )
         sendSykepengesoknad(soknad2)
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksEttMinutt.until {
             organisasjonRepository.findByOrgnummer(soknad2.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -112,7 +110,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
 
         sendSykepengesoknad(soknad)
 
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksEttMinutt.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -130,7 +128,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
             )
         sendSykepengesoknad(soknad2)
 
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksEttMinutt.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!.navn == "Bedriften AS Med nytt navn :)"
         }
 

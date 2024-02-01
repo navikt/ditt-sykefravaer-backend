@@ -7,7 +7,6 @@ import no.nav.helse.flex.melding.domene.Variant
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.shouldHaveSize
-import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private const val FNR_1 = "fnr-1"
 
@@ -48,7 +46,7 @@ class IntegrationTest : FellesTestOppsett() {
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
-        await().atMost(1, TimeUnit.MINUTES).until {
+        ventMaksEttMinutt.until {
             meldingRepository.findByFnrIn(listOf(FNR_1)).isNotEmpty()
         }
 
@@ -71,7 +69,7 @@ class IntegrationTest : FellesTestOppsett() {
         val meldinger = hentMeldinger(FNR_1)
         val uuid = meldinger.first().uuid
         lukkMelding(FNR_1, uuid)
-        await().atMost(1, TimeUnit.MINUTES).until {
+        ventMaksEttMinutt.until {
             meldingRepository.findByMeldingUuid(uuid)!!.lukket != null
         }
         hentMeldinger(FNR_1).shouldHaveSize(0)
@@ -99,7 +97,7 @@ class IntegrationTest : FellesTestOppsett() {
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
-        await().atMost(1, TimeUnit.MINUTES).until {
+        ventMaksEttMinutt.until {
             meldingRepository.findByFnrIn(listOf(FNR_1)).size == 2
         }
 

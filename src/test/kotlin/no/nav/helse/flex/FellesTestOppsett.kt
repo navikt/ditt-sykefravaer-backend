@@ -7,6 +7,8 @@ import no.nav.helse.flex.organisasjon.OrganisasjonRepository
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import org.awaitility.Awaitility.await
+import org.awaitility.core.ConditionFactory
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +24,7 @@ import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 private class PostgreSQLContainer14 : PostgreSQLContainer<PostgreSQLContainer14>("postgres:14-alpine")
@@ -69,6 +72,8 @@ abstract class FellesTestOppsett {
 
             threads.forEach { it.join() }
         }
+
+        val ventMaksEttMinutt: ConditionFactory = await().atMost(1, TimeUnit.MINUTES)
     }
 
     @AfterAll
