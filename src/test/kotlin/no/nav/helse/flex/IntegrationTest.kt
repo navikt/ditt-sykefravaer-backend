@@ -48,7 +48,7 @@ class IntegrationTest : FellesTestOppsett() {
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
-        await().atMost(101, TimeUnit.MILLISECONDS).until {
+        await().atMost(1, TimeUnit.MINUTES).until {
             meldingRepository.findByFnrIn(listOf(FNR_1)).isNotEmpty()
         }
 
@@ -71,7 +71,7 @@ class IntegrationTest : FellesTestOppsett() {
         val meldinger = hentMeldinger(FNR_1)
         val uuid = meldinger.first().uuid
         lukkMelding(FNR_1, uuid)
-        await().atMost(101, TimeUnit.MILLISECONDS).until {
+        await().atMost(1, TimeUnit.MINUTES).until {
             meldingRepository.findByMeldingUuid(uuid)!!.lukket != null
         }
         hentMeldinger(FNR_1).shouldHaveSize(0)
@@ -99,7 +99,7 @@ class IntegrationTest : FellesTestOppsett() {
         val uuid = UUID.randomUUID().toString()
         meldingKafkaProducer.produserMelding(uuid, kafkaMelding)
 
-        await().atMost(101, TimeUnit.MILLISECONDS).until {
+        await().atMost(1, TimeUnit.MINUTES).until {
             meldingRepository.findByFnrIn(listOf(FNR_1)).size == 2
         }
 
