@@ -73,7 +73,7 @@ abstract class FellesTestOppsett {
             threads.forEach { it.join() }
         }
 
-        val ventMaksEttMinutt: ConditionFactory = await().atMost(1, TimeUnit.MINUTES)
+        val ventMaksEttMinutt: ConditionFactory = await().atMost(10, TimeUnit.SECONDS)
     }
 
     @AfterAll
