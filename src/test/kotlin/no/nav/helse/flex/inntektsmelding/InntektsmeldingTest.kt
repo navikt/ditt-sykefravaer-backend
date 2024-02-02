@@ -9,7 +9,6 @@ import org.amshove.kluent.shouldHaveSize
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
-import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class InntektsmeldingTest : FellesTestOppsett() {
     @Autowired
@@ -82,7 +80,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
         inntektsmeldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(0)
         produserMelding(UUID.randomUUID().toString(), inntektsmelding)
 
-        await().atMost(10, TimeUnit.SECONDS).until {
+        ventMaksTiSekunder.until {
             inntektsmeldingRepository.findByFnrIn(listOf(fnr)).isNotEmpty()
         }
         inntektsmeldingRepository.findByFnrIn(listOf(fnr)).shouldHaveSize(1)
