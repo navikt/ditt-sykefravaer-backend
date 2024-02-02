@@ -36,7 +36,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
 
         sendSykepengesoknad(soknad)
 
-        ventMaksEttMinutt.until {
+        ventMaksTiSekunder.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -65,7 +65,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!).shouldBeNull()
 
         sendSykepengesoknad(soknad)
-        ventMaksEttMinutt.until {
+        ventMaksTiSekunder.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
         val org = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
@@ -82,7 +82,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
                     ),
             )
         sendSykepengesoknad(soknad2)
-        ventMaksEttMinutt.until {
+        ventMaksTiSekunder.until {
             organisasjonRepository.findByOrgnummer(soknad2.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -110,7 +110,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
 
         sendSykepengesoknad(soknad)
 
-        ventMaksEttMinutt.until {
+        ventMaksTiSekunder.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!) != null
         }
 
@@ -128,7 +128,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
             )
         sendSykepengesoknad(soknad2)
 
-        ventMaksEttMinutt.until {
+        ventMaksTiSekunder.until {
             organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!.navn == "Bedriften AS Med nytt navn :)"
         }
 
