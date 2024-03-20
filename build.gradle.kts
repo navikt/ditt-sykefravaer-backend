@@ -29,7 +29,7 @@ val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2023.12.13-04-13-2ca03"
 val sykepengesoknadKafkaVersion = "2024.02.19-15.43-44d781d3"
-val springDocOpenApiVersion = "2.3.0"
+val springDocOpenApiVersion = "2.4.0"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
