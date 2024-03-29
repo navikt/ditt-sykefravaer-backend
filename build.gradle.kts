@@ -28,7 +28,7 @@ val tokenSupportVersion = "4.1.3"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2024.03.11-02-07-32abf"
-val sykepengesoknadKafkaVersion = "2024.02.19-15.43-44d781d3"
+val sykepengesoknadKafkaVersion = "2024.03.21-14.13-5011349f"
 val springDocOpenApiVersion = "2.4.0"
 
 dependencies {
