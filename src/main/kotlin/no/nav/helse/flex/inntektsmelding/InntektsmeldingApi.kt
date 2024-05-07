@@ -2,7 +2,6 @@ package no.nav.helse.flex.inntektsmelding
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.objectMapper
@@ -22,7 +21,6 @@ import java.time.LocalDate
 
 @Controller
 @RequestMapping("/api/v1")
-@Tag(name = "inntektsmeldinger", description = "Henting av inntektsmeldinger")
 class InntektsmeldingApi(
     val inntektsmeldingRepository: InntektsmeldingRepository,
     @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
