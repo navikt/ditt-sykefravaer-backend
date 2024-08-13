@@ -2,7 +2,8 @@
 *.iml
 target
 
-.gradle
+.gradle/
+.kotlin/
 build/
 out/
 *.DS_Store
