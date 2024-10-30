@@ -1,5 +1,6 @@
 package no.nav.helse.flex
 
+import com.fasterxml.jackson.databind.node.NullNode
 import no.nav.helse.flex.melding.MeldingKafkaProducer
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.OpprettMelding
@@ -61,6 +62,7 @@ class IntegrationTest : FellesTestOppsett() {
         melding1.shouldHaveSize(1)
         melding1.first().tekst `should be equal to` "Melding 1"
         melding1.first().variant `should be equal to` "info"
+        melding1.first().metadata`should be equal to` NullNode.getInstance()
     }
 
     @Test

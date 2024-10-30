@@ -1,7 +1,9 @@
 package no.nav.helse.flex.melding
 
+import com.fasterxml.jackson.databind.JsonNode
 import no.nav.helse.flex.melding.domene.MeldingDbRecord
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
+import org.postgresql.util.PGobject
 import org.springframework.stereotype.Component
 import java.time.Instant
 
@@ -35,6 +37,7 @@ class OppdaterMeldingerFraKafka(
                     lenke = meldingKafkaDto.opprettMelding.lenke,
                     variant = meldingKafkaDto.opprettMelding.variant.toString(),
                     lukkbar = meldingKafkaDto.opprettMelding.lukkbar,
+                    metadata = meldingKafkaDto.opprettMelding.metadata?.tilPgJson(),
                 ),
             )
         }
@@ -52,4 +55,11 @@ class OppdaterMeldingerFraKafka(
             meldingRepository.save(dbMelding.copy(lukket = Instant.now()))
         }
     }
+}
+
+fun JsonNode.tilPgJson(): PGobject {
+    val pgobj = PGobject()
+    pgobj.type = "json"
+    pgobj.value = this.toString()
+    return pgobj
 }

@@ -1,5 +1,6 @@
 package no.nav.helse.flex.melding.domene
 
+import com.fasterxml.jackson.databind.JsonNode
 import java.time.Instant
 
 data class MeldingRest(
@@ -10,4 +11,5 @@ data class MeldingRest(
     val lukkbar: Boolean,
     val meldingType: String,
     val opprettet: Instant,
+    val metadata: JsonNode?,
 )

@@ -1,5 +1,6 @@
 package no.nav.helse.flex.melding
 
+import com.fasterxml.jackson.databind.JsonNode
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.exception.AbstractApiError
@@ -7,8 +8,10 @@ import no.nav.helse.flex.exception.LogLevel
 import no.nav.helse.flex.melding.domene.LukkMelding
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.MeldingRest
+import no.nav.helse.flex.objectMapper
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import org.postgresql.util.PGobject
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -55,6 +58,7 @@ class MeldingApi(
                     lukkbar = it.lukkbar,
                     meldingType = it.meldingType,
                     opprettet = it.opprettet,
+                    metadata = it.metadata?.tilJsonNode(),
                 )
             }
     }
@@ -86,6 +90,10 @@ class MeldingApi(
         )
         return "lukket"
     }
+}
+
+private fun PGobject.tilJsonNode(): JsonNode {
+    return objectMapper.readTree(value)
 }
 
 private class FeilUuidForLukking : AbstractApiError(

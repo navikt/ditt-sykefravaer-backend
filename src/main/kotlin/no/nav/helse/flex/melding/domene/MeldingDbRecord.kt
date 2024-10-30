@@ -1,5 +1,6 @@
 package no.nav.helse.flex.melding.domene
 
+import org.postgresql.util.PGobject
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.time.Instant
@@ -18,4 +19,5 @@ data class MeldingDbRecord(
     val opprettet: Instant,
     val synligFremTil: Instant?,
     val lukket: Instant?,
+    val metadata: PGobject? = null,
 )
