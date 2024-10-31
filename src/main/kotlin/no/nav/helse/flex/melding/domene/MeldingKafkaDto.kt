@@ -1,5 +1,6 @@
 package no.nav.helse.flex.melding.domene
 
+import com.fasterxml.jackson.databind.JsonNode
 import java.time.Instant
 
 data class MeldingKafkaDto(
@@ -26,4 +27,5 @@ data class OpprettMelding(
     val lukkbar: Boolean,
     val meldingType: String,
     val synligFremTil: Instant?,
+    val metadata: JsonNode? = null,
 )
