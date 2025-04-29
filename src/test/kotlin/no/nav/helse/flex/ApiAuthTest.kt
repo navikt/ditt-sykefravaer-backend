@@ -11,56 +11,68 @@ class ApiAuthTest : FellesTestOppsett() {
 
     @Test
     fun `melding - krever riktig audience`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/meldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/meldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
     fun `melding - krever riktig client id`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/meldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isForbidden)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/meldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isForbidden)
     }
 
     @Test
     fun `melding - krever riktig idp`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/meldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/meldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
     fun `Inntektsmelding - krever riktig audience`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/inntektsmeldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, audience = "facebook")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
     fun `Inntektsmelding - krever riktig client id`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isForbidden)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/inntektsmeldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, clientId = "facebook")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isForbidden)
     }
 
     @Test
     fun `Inntektsmelding - krever riktig idp`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
-                .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/v1/inntektsmeldinger")
+                    .header("Authorization", "Bearer ${tokenxToken(fnr = fnr, issuerId = "loginservice")}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
