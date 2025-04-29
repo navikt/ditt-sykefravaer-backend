@@ -15,13 +15,13 @@ class MeldingKafkaProducer(
     fun produserMelding(
         meldingUuid: String,
         meldingKafkaDto: MeldingKafkaDto,
-    ): RecordMetadata {
-        return producer.send(
-            ProducerRecord(
-                DITT_SYKEFRAVAER_MELDING_TOPIC,
-                meldingUuid,
-                meldingKafkaDto.serialisertTilString(),
-            ),
-        ).get()
-    }
+    ): RecordMetadata =
+        producer
+            .send(
+                ProducerRecord(
+                    DITT_SYKEFRAVAER_MELDING_TOPIC,
+                    meldingUuid,
+                    meldingKafkaDto.serialisertTilString(),
+                ),
+            ).get()
 }

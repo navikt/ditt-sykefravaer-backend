@@ -22,14 +22,14 @@ class TokenValidator(
         return claims
     }
 
-    fun fnrFraIdportenTokenX(claims: JwtTokenClaims): String {
-        return claims.getStringClaim("pid")
-    }
+    fun fnrFraIdportenTokenX(claims: JwtTokenClaims): String = claims.getStringClaim("pid")
 }
 
-class IngenTilgang(override val message: String) : AbstractApiError(
-    message = message,
-    httpStatus = HttpStatus.FORBIDDEN,
-    reason = "INGEN_TILGANG",
-    loglevel = LogLevel.WARN,
-)
+class IngenTilgang(
+    override val message: String,
+) : AbstractApiError(
+        message = message,
+        httpStatus = HttpStatus.FORBIDDEN,
+        reason = "INGEN_TILGANG",
+        loglevel = LogLevel.WARN,
+    )

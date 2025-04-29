@@ -45,7 +45,8 @@ class MeldingApi(
     fun hentMeldinger(): List<MeldingRest> {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
-        return meldingRepository.findByFnrIn(listOf(fnr))
+        return meldingRepository
+            .findByFnrIn(listOf(fnr))
             .filter { it.synligFremTil == null || it.synligFremTil.isAfter(Instant.now()) }
             .filter { it.lukket == null }
             .map {
@@ -73,7 +74,8 @@ class MeldingApi(
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
 
         val meldingDbRecord = (
-            meldingRepository.findByFnrIn(listOf(fnr))
+            meldingRepository
+                .findByFnrIn(listOf(fnr))
                 .firstOrNull { it.meldingUuid == meldingUuid }
                 ?: throw FeilUuidForLukking()
         )
@@ -92,20 +94,20 @@ class MeldingApi(
     }
 }
 
-private fun PGobject.tilJsonNode(): JsonNode {
-    return objectMapper.readTree(value)
-}
+private fun PGobject.tilJsonNode(): JsonNode = objectMapper.readTree(value)
 
-private class FeilUuidForLukking : AbstractApiError(
-    message = "Forsøker å lukke uuid vi ikke finner i databasen",
-    httpStatus = HttpStatus.BAD_REQUEST,
-    reason = "FEIL_UUID_FOR_LUKKING",
-    loglevel = LogLevel.WARN,
-)
+private class FeilUuidForLukking :
+    AbstractApiError(
+        message = "Forsøker å lukke uuid vi ikke finner i databasen",
+        httpStatus = HttpStatus.BAD_REQUEST,
+        reason = "FEIL_UUID_FOR_LUKKING",
+        loglevel = LogLevel.WARN,
+    )
 
-private class IkkeLukkbar : AbstractApiError(
-    message = "Forsøker å lukke melding som ikke er lukkbar",
-    httpStatus = HttpStatus.BAD_REQUEST,
-    reason = "IKKE_LUKKBAR",
-    loglevel = LogLevel.WARN,
-)
+private class IkkeLukkbar :
+    AbstractApiError(
+        message = "Forsøker å lukke melding som ikke er lukkbar",
+        httpStatus = HttpStatus.BAD_REQUEST,
+        reason = "IKKE_LUKKBAR",
+        loglevel = LogLevel.WARN,
+    )

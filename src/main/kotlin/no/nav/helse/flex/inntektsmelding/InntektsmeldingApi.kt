@@ -42,7 +42,8 @@ class InntektsmeldingApi(
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
         val inntektsmeldinger =
-            inntektsmeldingRepository.findByFnrIn(listOf(fnr))
+            inntektsmeldingRepository
+                .findByFnrIn(listOf(fnr))
                 .filter { it.arbeidsgivertype == "VIRKSOMHET" }
                 .map { it.tilRsInntektsmelding() }
 

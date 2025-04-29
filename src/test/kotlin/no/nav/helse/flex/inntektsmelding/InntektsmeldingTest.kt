@@ -89,23 +89,27 @@ class InntektsmeldingTest : FellesTestOppsett() {
     fun produserMelding(
         meldingUuid: String,
         melding: String,
-    ): RecordMetadata {
-        return producer.send(
-            ProducerRecord(
-                INNTEKTSMELDING_TOPIC,
-                meldingUuid,
-                melding,
-            ),
-        ).get()
-    }
+    ): RecordMetadata =
+        producer
+            .send(
+                ProducerRecord(
+                    INNTEKTSMELDING_TOPIC,
+                    meldingUuid,
+                    melding,
+                ),
+            ).get()
 
     fun hentInntektsmeldinger(fnr: String): List<RSInntektsmelding> {
         val json =
-            mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/inntektsmeldinger")
-                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                    .contentType(MediaType.APPLICATION_JSON),
-            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("/api/v1/inntektsmeldinger")
+                        .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                        .contentType(MediaType.APPLICATION_JSON),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response.contentAsString
 
         return objectMapper.readValue(json)
     }

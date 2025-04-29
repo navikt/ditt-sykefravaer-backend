@@ -73,11 +73,15 @@ abstract class FellesTestOppsett {
 
     fun hentMeldinger(fnr: String): List<MeldingRest> {
         val json =
-            mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/meldinger")
-                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                    .contentType(MediaType.APPLICATION_JSON),
-            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("/api/v1/meldinger")
+                        .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                        .contentType(MediaType.APPLICATION_JSON),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response.contentAsString
 
         return objectMapper.readValue(json)
     }
@@ -87,11 +91,15 @@ abstract class FellesTestOppsett {
         id: String,
     ): String {
         val json =
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/meldinger/$id/lukk")
-                    .header("Authorization", "Bearer ${tokenxToken(fnr)}")
-                    .contentType(MediaType.APPLICATION_JSON),
-            ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .post("/api/v1/meldinger/$id/lukk")
+                        .header("Authorization", "Bearer ${tokenxToken(fnr)}")
+                        .contentType(MediaType.APPLICATION_JSON),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response.contentAsString
 
         return json
     }
@@ -101,11 +109,14 @@ abstract class FellesTestOppsett {
         acrClaim: String,
     ): String {
         val responseCode =
-            mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/meldinger")
-                    .header("Authorization", "Bearer ${tokenxToken(fnr, acrClaim)}")
-                    .contentType(MediaType.APPLICATION_JSON),
-            ).andReturn().response.status
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("/api/v1/meldinger")
+                        .header("Authorization", "Bearer ${tokenxToken(fnr, acrClaim)}")
+                        .contentType(MediaType.APPLICATION_JSON),
+                ).andReturn()
+                .response.status
 
         return responseCode.toString()
     }
@@ -123,17 +134,17 @@ abstract class FellesTestOppsett {
                 "client_id" to clientId,
                 "pid" to fnr,
             ),
-    ): String {
-        return server.issueToken(
-            issuerId,
-            clientId,
-            DefaultOAuth2TokenCallback(
-                issuerId = issuerId,
-                subject = UUID.randomUUID().toString(),
-                audience = listOf(audience),
-                claims = claims,
-                expiry = 3600,
-            ),
-        ).serialize()
-    }
+    ): String =
+        server
+            .issueToken(
+                issuerId,
+                clientId,
+                DefaultOAuth2TokenCallback(
+                    issuerId = issuerId,
+                    subject = UUID.randomUUID().toString(),
+                    audience = listOf(audience),
+                    claims = claims,
+                    expiry = 3600,
+                ),
+            ).serialize()
 }

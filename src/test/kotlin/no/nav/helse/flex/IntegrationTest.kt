@@ -62,7 +62,7 @@ class IntegrationTest : FellesTestOppsett() {
         melding1.shouldHaveSize(1)
         melding1.first().tekst `should be equal to` "Melding 1"
         melding1.first().variant `should be equal to` "info"
-        melding1.first().metadata`should be equal to` NullNode.getInstance()
+        melding1.first().metadata `should be equal to` NullNode.getInstance()
     }
 
     @Test
@@ -111,10 +111,12 @@ class IntegrationTest : FellesTestOppsett() {
     fun `Kan ikke lukke melding tilhørende noen andre`() {
         val uuid = UUID.randomUUID().toString()
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/meldinger/$uuid/lukk")
-                .header("Authorization", "Bearer ${tokenxToken(FNR_1)}")
-                .contentType(MediaType.APPLICATION_JSON),
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .post("/api/v1/meldinger/$uuid/lukk")
+                    .header("Authorization", "Bearer ${tokenxToken(FNR_1)}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 }

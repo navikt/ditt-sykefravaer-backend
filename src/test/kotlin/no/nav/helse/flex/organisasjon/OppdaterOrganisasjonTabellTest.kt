@@ -138,13 +138,14 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
     }
 
     fun sendSykepengesoknad(soknad: SykepengesoknadDTO) {
-        producer.send(
-            ProducerRecord(
-                FLEX_SYKEPENGESOKNAD_TOPIC,
-                null,
-                soknad.id,
-                soknad.serialisertTilString(),
-            ),
-        ).get()
+        producer
+            .send(
+                ProducerRecord(
+                    FLEX_SYKEPENGESOKNAD_TOPIC,
+                    null,
+                    soknad.id,
+                    soknad.serialisertTilString(),
+                ),
+            ).get()
     }
 }
