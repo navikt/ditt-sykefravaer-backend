@@ -23,7 +23,7 @@ import java.time.LocalDate
 @RequestMapping("/api/v1")
 class InntektsmeldingApi(
     val inntektsmeldingRepository: InntektsmeldingRepository,
-    @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
+    @param:Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
     val dittSykefravaerFrontendClientId: String,
     val tokenValidationContextHolder: TokenValidationContextHolder,
     val leggTilOrganisasjonnavn: LeggTilOrganisasjonnavn,

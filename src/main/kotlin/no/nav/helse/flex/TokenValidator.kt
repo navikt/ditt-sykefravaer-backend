@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 
 class TokenValidator(
-    @Autowired
+    @param:Autowired
     private val tokenValidationContextHolder: TokenValidationContextHolder,
     private val expectedClientId: String,
 ) {
