@@ -29,7 +29,7 @@ class MeldingApi(
     val meldingRepository: MeldingRepository,
     val tokenValidationContextHolder: TokenValidationContextHolder,
     val meldingKafkaProducer: MeldingKafkaProducer,
-    @Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
+    @param:Value("\${DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID}")
     val dittSykefravaerFrontendClientId: String,
 ) {
     lateinit var tokenValidator: TokenValidator
