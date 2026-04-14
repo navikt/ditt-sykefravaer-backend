@@ -14,6 +14,9 @@ spring:
     hikari:
       minimum-idle: 1
       maximum-pool-size: 5
+  jackson:
+    mapper:
+      fix-field-name-upper-case-prefix: false
 
 aiven-kafka:
   auto-offset-reset: none
