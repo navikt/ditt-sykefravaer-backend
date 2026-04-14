@@ -1,12 +1,11 @@
 package no.nav.helse.flex.inntektsmelding
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
-import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.organisasjon.LeggTilOrganisasjonnavn
-import no.nav.inntektsmeldingkontrakt.*
+import no.nav.inntektsmeldingkontrakt.PengeSerialiserer
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Value
@@ -32,12 +31,17 @@ class InntektsmeldingApi(
 
     @PostConstruct
     fun init() {
-        tokenValidator = TokenValidator(tokenValidationContextHolder, dittSykefravaerFrontendClientId)
+        tokenValidator =
+            TokenValidator(tokenValidationContextHolder, dittSykefravaerFrontendClientId)
     }
 
     @GetMapping("/inntektsmeldinger", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    @ProtectedWithClaims(issuer = "tokenx", combineWithOr = true, claimMap = ["acr=Level4", "acr=idporten-loa-high"])
+    @ProtectedWithClaims(
+        issuer = "tokenx",
+        combineWithOr = true,
+        claimMap = ["acr=Level4", "acr=idporten-loa-high"],
+    )
     fun getInntektsmeldinger(): List<RSInntektsmelding> {
         val claims = tokenValidator.validerTokenXClaims()
         val fnr = tokenValidator.fnrFraIdportenTokenX(claims)
@@ -52,20 +56,21 @@ class InntektsmeldingApi(
 }
 
 private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
-    val im: Inntektsmelding = objectMapper.readValue(this.inntektsmelding)
+    val apifelter = InntektsmeldingJsonParser.fraJsonTilApifelter(this.inntektsmelding)
+
     return RSInntektsmelding(
         mottattDato = this.mottattDato,
-        beregnetInntekt = im.beregnetInntekt,
-        inntektsmeldingId = im.inntektsmeldingId,
-        arbeidsgiverperioder = im.arbeidsgiverperioder,
-        foersteFravaersdag = im.foersteFravaersdag,
-        refusjon = im.refusjon,
-        endringIRefusjoner = im.endringIRefusjoner,
-        opphoerAvNaturalytelser = im.opphoerAvNaturalytelser,
-        organisasjonsnavn = im.virksomhetsnummer ?: "Ukjent",
-        begrunnelseForReduksjonEllerIkkeUtbetalt = im.begrunnelseForReduksjonEllerIkkeUtbetalt,
-        bruttoUtbetalt = im.bruttoUtbetalt,
-        innsenderFulltNavn = im.innsenderFulltNavn,
+        beregnetInntekt = apifelter.beregnetInntekt,
+        inntektsmeldingId = apifelter.inntektsmeldingId,
+        arbeidsgiverperioder = apifelter.arbeidsgiverperioder,
+        foersteFravaersdag = apifelter.foersteFravaersdag,
+        refusjon = apifelter.refusjon,
+        endringIRefusjoner = apifelter.endringIRefusjoner,
+        opphoerAvNaturalytelser = apifelter.opphoerAvNaturalytelser,
+        organisasjonsnavn = apifelter.organisasjonsnavn,
+        begrunnelseForReduksjonEllerIkkeUtbetalt = apifelter.begrunnelseForReduksjonEllerIkkeUtbetalt,
+        bruttoUtbetalt = apifelter.bruttoUtbetalt,
+        innsenderFulltNavn = apifelter.innsenderFulltNavn,
     )
 }
 
@@ -76,10 +81,10 @@ data class RSInntektsmelding(
     val beregnetInntekt: BigDecimal?,
     val foersteFravaersdag: LocalDate?,
     val mottattDato: Instant,
-    val arbeidsgiverperioder: List<Periode>,
-    val endringIRefusjoner: List<EndringIRefusjon>,
-    val opphoerAvNaturalytelser: List<OpphoerAvNaturalytelse>,
-    val refusjon: Refusjon,
+    val arbeidsgiverperioder: JsonNode,
+    val endringIRefusjoner: JsonNode,
+    val opphoerAvNaturalytelser: JsonNode,
+    val refusjon: JsonNode,
     val begrunnelseForReduksjonEllerIkkeUtbetalt: String?,
     @field:JsonSerialize(using = PengeSerialiserer::class)
     val bruttoUtbetalt: BigDecimal?,
