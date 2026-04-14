@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
-import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.organisasjon.LeggTilOrganisasjonnavn
 import no.nav.inntektsmeldingkontrakt.PengeSerialiserer
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -57,22 +56,21 @@ class InntektsmeldingApi(
 }
 
 private fun InntektsmeldingDbRecord.tilRsInntektsmelding(): RSInntektsmelding {
-    val inntektsmeldingNode = objectMapper.readTree(this.inntektsmelding)
+    val apifelter = InntektsmeldingJsonParser.fraJsonTilApifelter(this.inntektsmelding)
+
     return RSInntektsmelding(
         mottattDato = this.mottattDato,
-        beregnetInntekt = inntektsmeldingNode.hentBigDecimal("beregnetInntekt"),
-        inntektsmeldingId = inntektsmeldingNode.hentPakrevdTekst("inntektsmeldingId"),
-        arbeidsgiverperioder = inntektsmeldingNode.hentNodeEllerTomArray("arbeidsgiverperioder"),
-        foersteFravaersdag = inntektsmeldingNode.hentLocalDate("foersteFravaersdag"),
-        refusjon = inntektsmeldingNode.hentNodeEllerTomtObjekt("refusjon"),
-        endringIRefusjoner = inntektsmeldingNode.hentNodeEllerTomArray("endringIRefusjoner"),
-        opphoerAvNaturalytelser =
-            inntektsmeldingNode.hentNodeEllerTomArray("opphoerAvNaturalytelser"),
-        organisasjonsnavn = inntektsmeldingNode.hentTekst("virksomhetsnummer") ?: "Ukjent",
-        begrunnelseForReduksjonEllerIkkeUtbetalt =
-            inntektsmeldingNode.hentTekst("begrunnelseForReduksjonEllerIkkeUtbetalt"),
-        bruttoUtbetalt = inntektsmeldingNode.hentBigDecimal("bruttoUtbetalt"),
-        innsenderFulltNavn = inntektsmeldingNode.hentPakrevdTekst("innsenderFulltNavn"),
+        beregnetInntekt = apifelter.beregnetInntekt,
+        inntektsmeldingId = apifelter.inntektsmeldingId,
+        arbeidsgiverperioder = apifelter.arbeidsgiverperioder,
+        foersteFravaersdag = apifelter.foersteFravaersdag,
+        refusjon = apifelter.refusjon,
+        endringIRefusjoner = apifelter.endringIRefusjoner,
+        opphoerAvNaturalytelser = apifelter.opphoerAvNaturalytelser,
+        organisasjonsnavn = apifelter.organisasjonsnavn,
+        begrunnelseForReduksjonEllerIkkeUtbetalt = apifelter.begrunnelseForReduksjonEllerIkkeUtbetalt,
+        bruttoUtbetalt = apifelter.bruttoUtbetalt,
+        innsenderFulltNavn = apifelter.innsenderFulltNavn,
     )
 }
 
@@ -92,23 +90,3 @@ data class RSInntektsmelding(
     val bruttoUtbetalt: BigDecimal?,
     val innsenderFulltNavn: String,
 )
-
-private fun JsonNode.hentPakrevdTekst(feltnavn: String): String =
-    hentTekst(feltnavn)
-        ?: throw IllegalArgumentException("Mangler feltet $feltnavn i inntektsmelding")
-
-private fun JsonNode.hentTekst(feltnavn: String): String? =
-    get(feltnavn)
-        ?.takeUnless { it.isNull }
-        ?.asText()
-        ?.takeIf { it.isNotBlank() }
-
-private fun JsonNode.hentBigDecimal(feltnavn: String): BigDecimal? = hentTekst(feltnavn)?.let(::BigDecimal)
-
-private fun JsonNode.hentLocalDate(feltnavn: String): LocalDate? = hentTekst(feltnavn)?.let(LocalDate::parse)
-
-private fun JsonNode.hentNodeEllerTomArray(feltnavn: String): JsonNode =
-    get(feltnavn)?.takeUnless { it.isNull } ?: objectMapper.createArrayNode()
-
-private fun JsonNode.hentNodeEllerTomtObjekt(feltnavn: String): JsonNode =
-    get(feltnavn)?.takeUnless { it.isNull } ?: objectMapper.createObjectNode()

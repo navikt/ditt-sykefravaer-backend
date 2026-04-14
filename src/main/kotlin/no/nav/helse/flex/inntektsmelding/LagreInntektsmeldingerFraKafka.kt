@@ -1,12 +1,8 @@
 package no.nav.helse.flex.inntektsmelding
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.helse.flex.logger
-import no.nav.helse.flex.objectMapper
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 @Component
 class LagreInntektsmeldingerFraKafka(
@@ -15,37 +11,23 @@ class LagreInntektsmeldingerFraKafka(
     val log = logger()
 
     fun oppdater(value: String) {
-        val inntektsmeldingNode = objectMapper.readTree(value)
-        val inntektsmeldingId = inntektsmeldingNode.hentPakrevdTekst("inntektsmeldingId")
+        val lagringsfelter = InntektsmeldingJsonParser.fraJsonTilLagringsfelter(value)
 
-        if (inntektsmeldingRepository.existsByInntektsmeldingId(inntektsmeldingId)) {
-            log.info("Inntektsmelding med id $inntektsmeldingId finnes allerede i databasen")
+        if (inntektsmeldingRepository.existsByInntektsmeldingId(lagringsfelter.inntektsmeldingId)) {
+            log.info("Inntektsmelding med id ${lagringsfelter.inntektsmeldingId} finnes allerede i databasen")
             return
         }
 
         inntektsmeldingRepository.save(
             InntektsmeldingDbRecord(
-                inntektsmeldingId = inntektsmeldingId,
-                mottattDato =
-                    inntektsmeldingNode
-                        .hentPakrevdLocalDateTime("mottattDato")
-                        .atZone(ZoneId.of("Europe/Oslo"))
-                        .toInstant(),
+                inntektsmeldingId = lagringsfelter.inntektsmeldingId,
+                mottattDato = lagringsfelter.mottattDato,
                 opprettet = Instant.now(),
-                fnr = inntektsmeldingNode.hentPakrevdTekst("arbeidstakerFnr"),
-                arbeidsgivertype = inntektsmeldingNode.hentPakrevdTekst("arbeidsgivertype"),
+                fnr = lagringsfelter.fnr,
+                arbeidsgivertype = lagringsfelter.arbeidsgivertype,
                 inntektsmelding = value,
             ),
         )
-        log.info("Lagret inntektsmelding med id $inntektsmeldingId i databasen")
+        log.info("Lagret inntektsmelding med id ${lagringsfelter.inntektsmeldingId} i databasen")
     }
 }
-
-private fun JsonNode.hentPakrevdTekst(feltnavn: String): String =
-    get(feltnavn)
-        ?.takeUnless { it.isNull }
-        ?.asText()
-        ?.takeIf { it.isNotBlank() }
-        ?: throw IllegalArgumentException("Mangler feltet $feltnavn i inntektsmelding")
-
-private fun JsonNode.hentPakrevdLocalDateTime(feltnavn: String): LocalDateTime = LocalDateTime.parse(hentPakrevdTekst(feltnavn))
