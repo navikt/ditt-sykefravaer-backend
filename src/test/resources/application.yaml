@@ -6,7 +6,7 @@ KAFKA_KEYSTORE_PATH: ""
 NAIS_CLUSTER_NAME: test
 
 aiven-kafka:
-  auto-offset-reset: latest
+  auto-offset-reset: earliest
 
 spring:
   profiles:
