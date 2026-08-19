@@ -1,6 +1,5 @@
 package no.nav.helse.flex
 
-import com.fasterxml.jackson.databind.node.NullNode
 import no.nav.helse.flex.melding.MeldingKafkaProducer
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.OpprettMelding
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import tools.jackson.databind.node.NullNode
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -58,11 +58,11 @@ class IntegrationTest : FellesTestOppsett() {
     @Test
     @Order(2)
     fun `Henter meldinger via REST API`() {
-        val melding1 = hentMeldinger(FNR_1)
-        melding1.shouldHaveSize(1)
-        melding1.first().tekst `should be equal to` "Melding 1"
-        melding1.first().variant `should be equal to` "info"
-        melding1.first().metadata `should be equal to` NullNode.getInstance()
+        val melding = hentMeldinger(FNR_1)
+        melding.shouldHaveSize(1)
+        melding.first().tekst `should be equal to` "Melding 1"
+        melding.first().variant `should be equal to` "info"
+        melding.first().metadata `should be equal to` NullNode.instance
     }
 
     @Test
