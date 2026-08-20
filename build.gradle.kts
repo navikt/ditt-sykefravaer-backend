@@ -24,7 +24,7 @@ repositories {
 }
 
 val testContainersVersion = "2.0.5"
-val tokenSupportVersion = "5.0.39"
+val tokenSupportVersion = "6.0.12"
 val logstashLogbackEncoderVersion = "9.0"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2026.04.15-10-22-eb2ae"
@@ -32,18 +32,16 @@ val sykepengesoknadKafkaVersion = "2026.07.28-13.22-138bf702"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation(kotlin("stdlib"))
-    implementation(kotlin("reflect"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-kafka")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
-    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.postgresql:postgresql")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.hibernate.validator:hibernate-validator")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
