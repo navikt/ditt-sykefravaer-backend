@@ -1,6 +1,5 @@
 package no.nav.helse.flex.inntektsmelding
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.FellesTestOppsett
 import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.organisasjon.Organisasjon
