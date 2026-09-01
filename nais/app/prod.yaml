@@ -8,9 +8,10 @@ db_tier: db-custom-1-3840
 db_highAvailability: true
 db_pointInTimeRecovery: true
 db_flags:
-  cloudsql.enable_pgaudit: "true"
+  cloudsql.enable_pgaudit: "on"
   pgaudit.log: 'write,ddl,role'
   pgaudit.log_parameter: "on"
+  pgaudit.log_relation: "on"
 env:
   SPRING_PROFILES_ACTIVE: default
   DITT_SYKEFRAVAER_FRONTEND_CLIENT_ID: prod-gcp:flex:ditt-sykefravaer
