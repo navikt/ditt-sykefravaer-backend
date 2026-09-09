@@ -1,6 +1,5 @@
 package no.nav.helse.flex.melding
 
-import com.fasterxml.jackson.databind.JsonNode
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.exception.AbstractApiError
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import tools.jackson.databind.JsonNode
 import java.time.Instant
 
 @Controller
