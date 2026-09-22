@@ -27,6 +27,9 @@ spec:
     - team: team-esyfo
       application: esyfovarsel
       access: write
+    - team: team-esyfo
+      application: syfo-budstikka
+      access: write
   {{#if testdataTilgang}}
     - team: flex
       application: flex-testdata-generator
