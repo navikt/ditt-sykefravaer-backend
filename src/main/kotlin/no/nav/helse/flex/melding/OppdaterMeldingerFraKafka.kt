@@ -1,10 +1,10 @@
 package no.nav.helse.flex.melding
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.helse.flex.melding.domene.MeldingDbRecord
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import org.postgresql.util.PGobject
 import org.springframework.stereotype.Component
+import tools.jackson.databind.JsonNode
 import java.time.Instant
 
 @Component
