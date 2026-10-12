@@ -1,7 +1,5 @@
 package no.nav.helse.flex.inntektsmelding
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
 import no.nav.helse.flex.TokenValidator
 import no.nav.helse.flex.objectMapper
@@ -15,6 +13,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.module.kotlin.readValue
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
