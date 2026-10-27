@@ -27,7 +27,7 @@ import tools.jackson.module.kotlin.readValue
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-private class PostgreSQLContainer14 : PostgreSQLContainer("postgres:14-alpine")
+private class PostgreSQLContainer18 : PostgreSQLContainer("postgres:18-alpine")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMetrics
@@ -56,7 +56,7 @@ abstract class FellesTestOppsett {
                 System.setProperty("KAFKA_BROKERS", bootstrapServers)
             }
 
-            PostgreSQLContainer14().apply {
+            PostgreSQLContainer18().apply {
                 withCommand("postgres", "-c", "wal_level=logical")
                 start()
                 System.setProperty("spring.datasource.url", "$jdbcUrl&reWriteBatchedInserts=true")
