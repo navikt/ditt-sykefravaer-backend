@@ -26,7 +26,7 @@ val tokenSupportVersion = "6.0.12"
 val logstashLogbackEncoderVersion = "9.0"
 val kluentVersion = "1.73"
 val inntektsmeldingKontraktVersion = "2026.04.15-10-22-eb2ae"
-val sykepengesoknadKafkaVersion = "2026.10.12-15.08-be710154"
+val sykepengesoknadKafkaVersion = "2026.10.29-06.32-9ce6afeb"
 val mockWebServerVersion = "5.5.0"
 
 dependencies {
