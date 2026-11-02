@@ -1,10 +1,10 @@
 package no.nav.helse.flex.organisasjon
 
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import no.nav.helse.flex.FellesTestOppsett
 import no.nav.helse.flex.serialisertTilString
 import no.nav.helse.flex.sykepengesoknad.kafka.*
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.shouldBeNull
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Test
@@ -41,9 +41,9 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         }
 
         val org = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
-        org.orgnummer `should be equal to` soknad.arbeidsgiver!!.orgnummer!!
-        org.navn `should be equal to` soknad.arbeidsgiver!!.navn!!
-        org.oppdatertAv `should be equal to` soknad.id
+        org.orgnummer shouldBe soknad.arbeidsgiver!!.orgnummer!!
+        org.navn shouldBe soknad.arbeidsgiver!!.navn!!
+        org.oppdatertAv shouldBe soknad.id
     }
 
     @Test
@@ -87,7 +87,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         }
 
         val org2 = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
-        org2.oppdatert `should be equal to` org.oppdatert
+        org2.oppdatert shouldBe org.oppdatert
     }
 
     @Test
@@ -115,7 +115,7 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         }
 
         val org = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
-        org.navn `should be equal to` soknad.arbeidsgiver!!.navn!!
+        org.navn shouldBe soknad.arbeidsgiver!!.navn!!
 
         val soknad2 =
             soknad.copy(
@@ -133,8 +133,8 @@ class OppdaterOrganisasjonTabellTest : FellesTestOppsett() {
         }
 
         val orgEtterOppdatering = organisasjonRepository.findByOrgnummer(soknad.arbeidsgiver!!.orgnummer!!)!!
-        orgEtterOppdatering.navn `should be equal to` "Bedriften AS Med nytt navn :)"
-        orgEtterOppdatering.oppdatertAv `should be equal to` soknad2.id
+        orgEtterOppdatering.navn shouldBe "Bedriften AS Med nytt navn :)"
+        orgEtterOppdatering.oppdatertAv shouldBe soknad2.id
     }
 
     fun sendSykepengesoknad(soknad: SykepengesoknadDTO) {

@@ -1,10 +1,10 @@
 package no.nav.helse.flex.inntektsmelding
 
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import no.nav.helse.flex.FellesTestOppsett
 import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.organisasjon.Organisasjon
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.shouldHaveSize
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
@@ -39,7 +39,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
         setupTest()
 
         val melding = inntektsmeldingRepository.findByFnrIn(listOf(fnr)).first()
-        melding.arbeidsgivertype `should be equal to` "VIRKSOMHET"
+        melding.arbeidsgivertype shouldBe "VIRKSOMHET"
     }
 
     @Test
@@ -52,7 +52,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
 
         val savedInntektsmelding = fetchedInntektsmeldings.first()
 
-        savedInntektsmelding.inntektsmeldingId `should be equal to` "67e56f3c-6eee-4378-b9e3-ad8be6b7a111"
+        savedInntektsmelding.inntektsmeldingId shouldBe "67e56f3c-6eee-4378-b9e3-ad8be6b7a111"
     }
 
     @Test
@@ -73,7 +73,7 @@ class InntektsmeldingTest : FellesTestOppsett() {
 
         val fetchedInntektsmeldings = hentInntektsmeldinger(fnr)
         fetchedInntektsmeldings.shouldHaveSize(1)
-        fetchedInntektsmeldings[0].organisasjonsnavn `should be equal to` orgnavn
+        fetchedInntektsmeldings[0].organisasjonsnavn shouldBe orgnavn
     }
 
     private fun setupTest() {
