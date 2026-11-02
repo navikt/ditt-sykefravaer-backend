@@ -1,12 +1,12 @@
 package no.nav.helse.flex
 
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import no.nav.helse.flex.melding.MeldingKafkaProducer
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.OpprettMelding
 import no.nav.helse.flex.melding.domene.Variant
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should be null`
-import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -52,7 +52,7 @@ class IntegrationTest : FellesTestOppsett() {
         }
 
         val melding = meldingRepository.findByFnrIn(listOf(FNR_1)).first()
-        melding.lukket.`should be null`()
+        melding.lukket.shouldBeNull()
     }
 
     @Test
@@ -60,9 +60,9 @@ class IntegrationTest : FellesTestOppsett() {
     fun `Henter meldinger via REST API`() {
         val melding = hentMeldinger(FNR_1)
         melding.shouldHaveSize(1)
-        melding.first().tekst `should be equal to` "Melding 1"
-        melding.first().variant `should be equal to` "info"
-        melding.first().metadata `should be equal to` NullNode.instance
+        melding.first().tekst shouldBe "Melding 1"
+        melding.first().variant shouldBe "info"
+        melding.first().metadata shouldBe NullNode.instance
     }
 
     @Test

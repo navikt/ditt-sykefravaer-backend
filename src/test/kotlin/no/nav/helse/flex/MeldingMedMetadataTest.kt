@@ -1,12 +1,12 @@
 package no.nav.helse.flex
 
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import no.nav.helse.flex.melding.MeldingKafkaProducer
 import no.nav.helse.flex.melding.domene.MeldingKafkaDto
 import no.nav.helse.flex.melding.domene.OpprettMelding
 import no.nav.helse.flex.melding.domene.Variant
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should be null`
-import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -49,7 +49,7 @@ class MeldingMedMetadataTest : FellesTestOppsett() {
         }
 
         val melding = meldingRepository.findByFnrIn(listOf(fnr)).first()
-        melding.lukket.`should be null`()
+        melding.lukket.shouldBeNull()
     }
 
     @Test
@@ -57,8 +57,8 @@ class MeldingMedMetadataTest : FellesTestOppsett() {
     fun `Henter meldinger via REST API`() {
         val melding1 = hentMeldinger(fnr)
         melding1.shouldHaveSize(1)
-        melding1.first().tekst `should be equal to` "Melding 1"
-        melding1.first().variant `should be equal to` "info"
-        melding1.first().metadata.toString() `should be equal to` """{"ol":"1994"}"""
+        melding1.first().tekst shouldBe "Melding 1"
+        melding1.first().variant shouldBe "info"
+        melding1.first().metadata.toString() shouldBe """{"ol":"1994"}"""
     }
 }
